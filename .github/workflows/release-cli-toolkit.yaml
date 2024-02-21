@@ -28,6 +28,6 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            bin/Release/net8.0/win-x64/publish/*
+            bin/Release/net8.0/win-x64/*
           tag_name: ${{ github.ref }}
           title: Release ${{ github.ref }}
