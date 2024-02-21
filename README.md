@@ -25,7 +25,19 @@ export epochflow_key="<key>"
 ### Usage
 
 ```
+# Accounts
+./epoch get-account
+
+# Sets
 ./epoch create-set --name "<set_name>" --collision-mode "<overwrite | combine>"
 ./epoch list-sets
+./epoch get-set --id "<set_id>"
 ./epoch delete-set --id "<set_id>"
+
+# Tags
+./epoch list-tags --id "<set_id>"
+./epoch delete-tag --id "<set_id>" --tag "<tag_name>"
+
+# Data
+./epoch get-data --id "<set_id>" --tag "<tag_name_1,tag_name_2>"
 ```
