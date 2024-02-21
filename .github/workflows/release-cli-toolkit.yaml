@@ -2,6 +2,8 @@ name: Release CLI toolkit
 
 on:
   workflow_dispatch:
+permissions:
+  contents: write
 
 jobs:
   build:
