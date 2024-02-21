@@ -7,16 +7,6 @@ namespace EpochFlow.ApiClient;
 
 public static class EpochFlowStartupExtensions
 {
-    public static T ConfigureSettingsAndGet<T>(this IServiceCollection services, IConfiguration configuration)
-        where T : class
-    {
-        var settingsSection = configuration.GetRequiredSection(typeof(T).Name);
-        services.Configure<T>(settingsSection);
-        return settingsSection.Get<T>() ??
-               throw new NullReferenceException(
-                   $"Configuration section '{typeof(T).Name}' did not return type '{typeof(T).Name}'.");
-    }
-
     public static IServiceCollection AddEpochFlowV1(this IServiceCollection services, string apiKey, string accountId,
         string apiUrl)
     {
