@@ -6,7 +6,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        working-directory: dotnet/EpochFlow.Toolkit
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -21,13 +23,11 @@ jobs:
           dotnet restore
           dotnet build -c Release
           dotnet publish -c Release -r win-x64 --self-contained /p:PublishSingleFile=true
-        working-directory: dotnet/EpochFlow.Toolkit
-          
+
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            publish/*
+            bin/Release/net8.0/win-x64/publish/*
           tag_name: ${{ github.ref }}
           title: Release ${{ github.ref }}
-        working-directory: dotnet/EpochFlow.Toolkit/bin/Release/net8.0/win-x64
