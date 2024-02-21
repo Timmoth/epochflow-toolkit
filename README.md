@@ -2,6 +2,38 @@
 
 Repo containing public tools &amp; samples for EpochFlow
 
+## Nuget package
+
+This [nuget package](https://www.nuget.org/packages/Epochflow/) contains all the classes needed to integrate Epoch flow into your dotnet Api.
+
+### Install the nuget package
+```bash
+dotnet add package epochflow
+```
+
+### Configure services
+```csharp
+var apiKey = "<api_key>";
+var accountId = "<account_id>";
+var apiUrl = "<api_url>";
+services.AddEpochFlowV1(apiKey, accountId, apiUrl);
+```
+
+### Make requests
+```csharp
+private readonly IEpochFlowV1 _epochflow;
+
+public async Task Load(){
+  var setId = "<set_id>";
+  var result = await _epochflow.GetSet(setId);
+  if(!result.IsSuccessStatusCode){
+    return;
+  }
+
+  var set = result.Content;
+}
+```
+
 ## Using the CLI toolkit
 
 [Download the latest release for Windows, Linux or Osx](https://github.com/Timmoth/epochflow-toolkit/releases)
