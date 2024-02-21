@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
+using System.Text.Json;
 using EpochFlow.ApiClient;
 using EpochFlow.CpuMetrics.Utilities;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,14 +9,14 @@ using Refit;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
-namespace EpochFlow.Toolkit.Commands;
+namespace EpochFlow.Toolkit.Commands.Sets;
 
-public sealed class DeleteSetCommand : AsyncCommand<DeleteSetCommand.Settings>
+public sealed class ListSetsCommand : AsyncCommand<ListSetsCommand.Settings>
 {
-    private readonly ILogger<DeleteSetCommand> _logger;
+    private readonly ILogger<ListSetsCommand> _logger;
     private readonly IServiceProvider _serviceProvider;
 
-    public DeleteSetCommand(ILogger<DeleteSetCommand> logger, IServiceProvider serviceProvider)
+    public ListSetsCommand(ILogger<ListSetsCommand> logger, IServiceProvider serviceProvider)
     {
         _logger = logger;
         _serviceProvider = serviceProvider;
@@ -32,15 +33,24 @@ public sealed class DeleteSetCommand : AsyncCommand<DeleteSetCommand.Settings>
         var epochFlowApi = RestService.For<IEpochFlowV1>(httpClient, new RefitSettings());
 
         var stopwatch = Stopwatch.StartNew();
-        var response = await epochFlowApi.DeleteSet(settings.SetId);
+        var response = await epochFlowApi.GetSets();
         stopwatch.Stop();
         _logger.LogInformation(
             "Completed with status code: status code: [{StatusCode}] in {Duration}ms",
             response.StatusCode,
             stopwatch.ElapsedMilliseconds);
 
-        _logger.LogIfError(response);
-
+        if (response.IsSuccessStatusCode && response.Content != null)
+        {
+            _logger.LogInformation(JsonSerializer.Serialize(response.Content, new JsonSerializerOptions()
+            {
+                WriteIndented = true
+            }));
+        }
+        else
+        {
+            _logger.LogIfError(response);
+        }
         return 0;
     }
 
@@ -58,10 +68,6 @@ public sealed class DeleteSetCommand : AsyncCommand<DeleteSetCommand.Settings>
         [Description("API key")]
         public string ApiKey { get; set; } = string.Empty;
 
-        [CommandOption("--id")]
-        [Description("Set Id")]
-        public string SetId { get; set; } = string.Empty;
-
         public override ValidationResult Validate()
         {
             if (string.IsNullOrWhiteSpace(ApiUrl))
@@ -75,25 +81,20 @@ public sealed class DeleteSetCommand : AsyncCommand<DeleteSetCommand.Settings>
 
             if (string.IsNullOrWhiteSpace(AccountId))
             {
-                AccountId = Environment.GetEnvironmentVariable("epochflow_account_id") ?? string.Empty;
+                AccountId = Environment.GetEnvironmentVariable("epochflow_account") ?? string.Empty;
                 if (string.IsNullOrWhiteSpace(AccountId))
                 {
-                    return ValidationResult.Error("Specify Account Id with '--account' or 'epochflow_account_id' environment variable.");
+                    return ValidationResult.Error("Specify Account Id with '--account' or 'epochflow_account' environment variable.");
                 }
             }
 
             if (string.IsNullOrWhiteSpace(ApiKey))
             {
-                ApiKey = Environment.GetEnvironmentVariable("epochflow_api_key") ?? string.Empty;
+                ApiKey = Environment.GetEnvironmentVariable("epochflow_key") ?? string.Empty;
                 if (string.IsNullOrWhiteSpace(ApiKey))
                 {
-                    return ValidationResult.Error("Specify Api Key with '--key' or 'epochflow_api_key' environment variable.");
+                    return ValidationResult.Error("Specify Api Key with '--key' or 'epochflow_key' environment variable.");
                 }
-            }
-
-            if (string.IsNullOrWhiteSpace(SetId))
-            {
-                return ValidationResult.Error("Specify Set Id with '--id'");
             }
 
             return ValidationResult.Success();

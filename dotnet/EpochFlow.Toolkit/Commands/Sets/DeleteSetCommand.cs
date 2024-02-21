@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
-using System.Text.Json;
 using EpochFlow.ApiClient;
 using EpochFlow.CpuMetrics.Utilities;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,14 +8,14 @@ using Refit;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
-namespace EpochFlow.Toolkit.Commands;
+namespace EpochFlow.Toolkit.Commands.Sets;
 
-public sealed class ListSetsCommand : AsyncCommand<ListSetsCommand.Settings>
+public sealed class DeleteSetCommand : AsyncCommand<DeleteSetCommand.Settings>
 {
-    private readonly ILogger<ListSetsCommand> _logger;
+    private readonly ILogger<DeleteSetCommand> _logger;
     private readonly IServiceProvider _serviceProvider;
 
-    public ListSetsCommand(ILogger<ListSetsCommand> logger, IServiceProvider serviceProvider)
+    public DeleteSetCommand(ILogger<DeleteSetCommand> logger, IServiceProvider serviceProvider)
     {
         _logger = logger;
         _serviceProvider = serviceProvider;
@@ -33,24 +32,15 @@ public sealed class ListSetsCommand : AsyncCommand<ListSetsCommand.Settings>
         var epochFlowApi = RestService.For<IEpochFlowV1>(httpClient, new RefitSettings());
 
         var stopwatch = Stopwatch.StartNew();
-        var response = await epochFlowApi.GetSets();
+        var response = await epochFlowApi.DeleteSet(settings.SetId);
         stopwatch.Stop();
         _logger.LogInformation(
             "Completed with status code: status code: [{StatusCode}] in {Duration}ms",
             response.StatusCode,
             stopwatch.ElapsedMilliseconds);
 
-        if (response.IsSuccessStatusCode && response.Content != null)
-        {
-            _logger.LogInformation(JsonSerializer.Serialize(response.Content, new JsonSerializerOptions()
-            {
-                WriteIndented = true
-            }));
-        }
-        else
-        {
-            _logger.LogIfError(response);
-        }
+        _logger.LogIfError(response);
+
         return 0;
     }
 
@@ -67,6 +57,10 @@ public sealed class ListSetsCommand : AsyncCommand<ListSetsCommand.Settings>
         [CommandOption("--key")]
         [Description("API key")]
         public string ApiKey { get; set; } = string.Empty;
+
+        [CommandOption("--id")]
+        [Description("Set Id")]
+        public string SetId { get; set; } = string.Empty;
 
         public override ValidationResult Validate()
         {
@@ -95,6 +89,11 @@ public sealed class ListSetsCommand : AsyncCommand<ListSetsCommand.Settings>
                 {
                     return ValidationResult.Error("Specify Api Key with '--key' or 'epochflow_key' environment variable.");
                 }
+            }
+
+            if (string.IsNullOrWhiteSpace(SetId))
+            {
+                return ValidationResult.Error("Specify Set Id with '--id'");
             }
 
             return ValidationResult.Success();
