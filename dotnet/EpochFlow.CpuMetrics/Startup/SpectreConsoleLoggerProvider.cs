@@ -11,6 +11,5 @@ public class SpectreConsoleLoggerProvider : ILoggerProvider
 
     public void Dispose()
     {
-
     }
 }

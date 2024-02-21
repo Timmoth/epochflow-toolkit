@@ -1,6 +1,6 @@
-﻿using Refit;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using Refit;
 
 namespace EpochFlow.ApiClient.Data;
 

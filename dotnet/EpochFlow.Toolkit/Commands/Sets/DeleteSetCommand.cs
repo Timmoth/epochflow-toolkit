@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
 using EpochFlow.ApiClient;
-using EpochFlow.CpuMetrics.Utilities;
+using EpochFlow.ApiClient.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Refit;
@@ -68,33 +68,27 @@ public sealed class DeleteSetCommand : AsyncCommand<DeleteSetCommand.Settings>
             {
                 ApiUrl = Environment.GetEnvironmentVariable("epochflow_url") ?? string.Empty;
                 if (string.IsNullOrWhiteSpace(ApiUrl))
-                {
-                    return ValidationResult.Error("Specify Api url with '--url' or 'epochflow_url' environment variable.");
-                }
+                    return ValidationResult.Error(
+                        "Specify Api url with '--url' or 'epochflow_url' environment variable.");
             }
 
             if (string.IsNullOrWhiteSpace(AccountId))
             {
                 AccountId = Environment.GetEnvironmentVariable("epochflow_account") ?? string.Empty;
                 if (string.IsNullOrWhiteSpace(AccountId))
-                {
-                    return ValidationResult.Error("Specify Account Id with '--account' or 'epochflow_account' environment variable.");
-                }
+                    return ValidationResult.Error(
+                        "Specify Account Id with '--account' or 'epochflow_account' environment variable.");
             }
 
             if (string.IsNullOrWhiteSpace(ApiKey))
             {
                 ApiKey = Environment.GetEnvironmentVariable("epochflow_key") ?? string.Empty;
                 if (string.IsNullOrWhiteSpace(ApiKey))
-                {
-                    return ValidationResult.Error("Specify Api Key with '--key' or 'epochflow_key' environment variable.");
-                }
+                    return ValidationResult.Error(
+                        "Specify Api Key with '--key' or 'epochflow_key' environment variable.");
             }
 
-            if (string.IsNullOrWhiteSpace(SetId))
-            {
-                return ValidationResult.Error("Specify Set Id with '--id'");
-            }
+            if (string.IsNullOrWhiteSpace(SetId)) return ValidationResult.Error("Specify Set Id with '--id'");
 
             return ValidationResult.Success();
         }

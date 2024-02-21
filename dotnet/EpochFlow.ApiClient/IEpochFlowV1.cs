@@ -34,7 +34,7 @@ public interface IEpochFlowV1
     public Task<HttpResponseMessage> DeleteTag(string id, [Query] [AliasAs("tag")] string tag);
 
     [Get("/api/v1/sets/{id}/tags")]
-    public Task<ApiResponse<List<string>>> GetTags(string id);
+    public Task<ApiResponse<List<string>>> ListTags(string id);
 
     #endregion
 
@@ -69,7 +69,7 @@ public interface IEpochFlowV1
     public Task<ApiResponse<Set>> UpdateSet(string id, [Body] UpdateSet request);
 
     [Get("/api/v1/sets")]
-    public Task<ApiResponse<List<Set>>> GetSets();
+    public Task<ApiResponse<List<Set>>> ListSets();
 
     #endregion
 

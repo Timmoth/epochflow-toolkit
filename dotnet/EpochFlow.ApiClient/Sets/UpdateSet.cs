@@ -9,7 +9,6 @@ public class UpdateSet
 {
     [JsonPropertyName("name")]
     [AliasAs("name")]
-
     [MinLength(3)]
     [MaxLength(255)]
     public string Name { get; set; } = string.Empty;

@@ -13,18 +13,12 @@ public sealed class TypeResolver : ITypeResolver, IDisposable
 
     public void Dispose()
     {
-        if (_provider is IDisposable disposable)
-        {
-            disposable.Dispose();
-        }
+        if (_provider is IDisposable disposable) disposable.Dispose();
     }
 
     public object? Resolve(Type? type)
     {
-        if (type == null)
-        {
-            return null;
-        }
+        if (type == null) return null;
 
         return _provider.GetService(type);
     }

@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using EpochFlow.ApiClient;
 using EpochFlow.ApiClient.Data;
-using EpochFlow.CpuMetrics.Utilities;
+using EpochFlow.ApiClient.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Refit;

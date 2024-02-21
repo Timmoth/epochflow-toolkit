@@ -1,5 +1,5 @@
-﻿using Refit;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
+using Refit;
 
 namespace EpochFlow.ApiClient.Webhooks;
 

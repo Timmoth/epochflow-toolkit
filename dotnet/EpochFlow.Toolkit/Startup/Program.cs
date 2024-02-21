@@ -1,5 +1,6 @@
-﻿using EpochFlow.Toolkit.Commands;
+﻿using EpochFlow.Toolkit.Commands.Accounts;
 using EpochFlow.Toolkit.Commands.Sets;
+using EpochFlow.Toolkit.Commands.Sets.Data;
 using EpochFlow.Toolkit.Commands.Sets.Tags;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -40,9 +41,10 @@ internal class Program
 
             config.AddCommand<ListTagsCommand>("list-tags")
                 .WithDescription("List all tags within a set.");
-            
+
             config.AddCommand<DeleteTagCommand>("delete-tag")
                 .WithDescription("Deletes a tag within a set.");
+
             #endregion
 
             #region Data

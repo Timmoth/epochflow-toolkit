@@ -3,14 +3,14 @@ using System.Diagnostics;
 using System.Text.Json;
 using EpochFlow.ApiClient;
 using EpochFlow.ApiClient.Data;
-using EpochFlow.CpuMetrics.Utilities;
+using EpochFlow.ApiClient.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Refit;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
-namespace EpochFlow.Toolkit.Commands.Sets.Tags;
+namespace EpochFlow.Toolkit.Commands.Sets.Data;
 
 public sealed class GetDataCommand : AsyncCommand<GetDataCommand.Settings>
 {
@@ -46,16 +46,12 @@ public sealed class GetDataCommand : AsyncCommand<GetDataCommand.Settings>
             stopwatch.ElapsedMilliseconds);
 
         if (response.IsSuccessStatusCode && response.Content != null)
-        {
-            _logger.LogInformation(JsonSerializer.Serialize(response.Content, new JsonSerializerOptions()
+            _logger.LogInformation(JsonSerializer.Serialize(response.Content, new JsonSerializerOptions
             {
                 WriteIndented = true
             }));
-        }
         else
-        {
             _logger.LogIfError(response);
-        }
         return 0;
     }
 
@@ -95,33 +91,27 @@ public sealed class GetDataCommand : AsyncCommand<GetDataCommand.Settings>
             {
                 ApiUrl = Environment.GetEnvironmentVariable("epochflow_url") ?? string.Empty;
                 if (string.IsNullOrWhiteSpace(ApiUrl))
-                {
-                    return ValidationResult.Error("Specify Api url with '--url' or 'epochflow_url' environment variable.");
-                }
+                    return ValidationResult.Error(
+                        "Specify Api url with '--url' or 'epochflow_url' environment variable.");
             }
 
             if (string.IsNullOrWhiteSpace(AccountId))
             {
                 AccountId = Environment.GetEnvironmentVariable("epochflow_account") ?? string.Empty;
                 if (string.IsNullOrWhiteSpace(AccountId))
-                {
-                    return ValidationResult.Error("Specify Account Id with '--account' or 'epochflow_account' environment variable.");
-                }
+                    return ValidationResult.Error(
+                        "Specify Account Id with '--account' or 'epochflow_account' environment variable.");
             }
 
             if (string.IsNullOrWhiteSpace(ApiKey))
             {
                 ApiKey = Environment.GetEnvironmentVariable("epochflow_key") ?? string.Empty;
                 if (string.IsNullOrWhiteSpace(ApiKey))
-                {
-                    return ValidationResult.Error("Specify Api Key with '--key' or 'epochflow_key' environment variable.");
-                }
+                    return ValidationResult.Error(
+                        "Specify Api Key with '--key' or 'epochflow_key' environment variable.");
             }
 
-            if (string.IsNullOrWhiteSpace(SetId))
-            {
-                return ValidationResult.Error("Specify Set Id with '--id'");
-            }
+            if (string.IsNullOrWhiteSpace(SetId)) return ValidationResult.Error("Specify Set Id with '--id'");
 
             return ValidationResult.Success();
         }
