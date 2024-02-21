@@ -31,4 +31,4 @@ jobs:
         with:
           files: |
             dotnet/EpochFlow.Toolkit/bin/Release/net8.0/win-x64/publish/epoch.exe
-        tag_name: ${{ inputs.git-tag }}
+          tag_name: ${{ inputs.git-tag }}
