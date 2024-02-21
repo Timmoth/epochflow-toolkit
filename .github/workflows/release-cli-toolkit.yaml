@@ -1,0 +1,35 @@
+name: Release CLI toolkit
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Build and Package
+        run: |
+          dotnet restore
+          dotnet build -c Release
+          dotnet publish -c Release -r win-x64 --self-contained /p:PublishSingleFile=true
+        working-directory: dotnet/EpochFlow.Toolkit
+          
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            publish/*
+          tag_name: ${{ github.ref }}
+          title: Release ${{ github.ref }}
+        working-directory: dotnet/EpochFlow.Toolkit/bin/Release/net8.0/win-x64
