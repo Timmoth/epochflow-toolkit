@@ -6,25 +6,43 @@ Repo containing public tools &amp; samples for EpochFlow
 
 [Download the latest release for Windows, Linux or Osx](https://github.com/Timmoth/epochflow-toolkit/releases)
 
-### Configure environment variables
+### Configuration
 
+You must configure the cli toolkit with the api url, your account id and api key, there are two ways to do this:
+
+#### Parameters
+
+Each command takes the following parameters:
+
+```bash
+--url "https://api.epochflow.io/"
+--account "<account_id>"
+--key "<api_key>"
 ```
+
+#### Environment variables
+
 Windows:
+
+```powershell
 setx epochflow_url "https://api.epochflow.io/"
-setx epochflow_account "<account id>"
-setx epochflow_key "<key>"
+setx epochflow_account "<account_id>"
+setx epochflow_key "<api_key>"
 
 Open a new terminal so the environment variables are updated.
+```
 
 Linux / Osx:
+
+```bash
 export epochflow_url="https://api.epochflow.io/"
-export epochflow_account="<account id>"
-export epochflow_key="<key>"
+export epochflow_account="<account_id>"
+export epochflow_key="<api_key>"
 ```
 
 ### Usage
 
-```
+```bash
 # Accounts
 ./epoch get-account
 
