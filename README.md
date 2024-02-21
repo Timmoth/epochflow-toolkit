@@ -2,6 +2,9 @@
 
 Repo containing public tools &amp; samples for EpochFlow
 
+## Links
+[App](https://app.epochflow.io/) • [Docs](https://docs.epochflow.io/) • [Swagger Api](https://api.epochflow.io/swagger/index.html)
+
 ## Nuget package
 
 This [nuget package](https://www.nuget.org/packages/Epochflow/) contains all the classes needed to integrate Epoch flow into your dotnet Api.
