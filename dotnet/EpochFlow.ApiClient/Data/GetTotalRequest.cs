@@ -2,21 +2,22 @@
 using System.Text.Json.Serialization;
 using Refit;
 
-namespace EpochFlow.ApiClient.Data;
-
-public class GetTotalRequest
+namespace EpochFlow.ApiClient.Data
 {
-    [JsonPropertyName("tags")]
-    [AliasAs("tags")]
-    [MinLength(0)]
-    [MaxLength(10)]
-    public List<string>? Tags { get; init; }
-
-    public static GetTotalRequest Create(List<string>? tags = null)
+    public class GetTotalRequest
     {
-        return new GetTotalRequest
+        [JsonPropertyName("tags")]
+        [AliasAs("tags")]
+        [MinLength(0)]
+        [MaxLength(10)]
+        public List<string>? Tags { get; set; }
+
+        public static GetTotalRequest Create(List<string>? tags = null)
         {
-            Tags = tags
-        };
+            return new GetTotalRequest
+            {
+                Tags = tags
+            };
+        }
     }
 }

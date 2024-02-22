@@ -1,7 +1,9 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace EpochFlow.ApiClient.Analytics;
-
-public record AnalyticsData(
-    [property: JsonPropertyName("analytics")]
-    List<double[]> Analytics);
+namespace EpochFlow.ApiClient.Analytics
+{
+    public class AnalyticsData
+    {
+        [JsonPropertyName("analytics")] public List<double[]> Analytics { get; set; } = new List<double[]>();
+    }
+}

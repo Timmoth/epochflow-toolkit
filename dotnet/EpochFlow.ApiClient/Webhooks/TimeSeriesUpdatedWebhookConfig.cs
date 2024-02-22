@@ -1,18 +1,21 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace EpochFlow.ApiClient.Webhooks;
-
-public class TimeSeriesUpdatedWebhookConfig
+namespace EpochFlow.ApiClient.Webhooks
 {
-    [JsonPropertyName("url")] public string Url { get; set; } = string.Empty;
+    public class TimeSeriesUpdatedWebhookConfig
+    {
+        [JsonPropertyName("url")] public string Url { get; set; } = string.Empty;
 
-    [JsonPropertyName("headers")] public Dictionary<string, string> Headers { get; set; } = new();
+        [JsonPropertyName("headers")]
+        public Dictionary<string, string> Headers { get; set; } = new Dictionary<string, string>();
 
-    [JsonPropertyName("enabled")] public bool Enabled { get; set; } = false;
+        [JsonPropertyName("enabled")] public bool Enabled { get; set; } = false;
 
-    [JsonPropertyName("recent_requests")] public List<WebhookLogResponse> RecentRequests { get; set; } = new();
+        [JsonPropertyName("recent_requests")]
+        public List<WebhookLogResponse> RecentRequests { get; set; } = new List<WebhookLogResponse>();
 
-    [JsonPropertyName("update_interval")] public int UpdateInterval { get; set; }
+        [JsonPropertyName("update_interval")] public int UpdateInterval { get; set; }
 
-    [JsonPropertyName("update_at")] public long UpdateAt { get; set; }
+        [JsonPropertyName("update_at")] public long UpdateAt { get; set; }
+    }
 }

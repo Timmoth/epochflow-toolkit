@@ -1,10 +1,12 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace EpochFlow.ApiClient.Analytics;
-
-public record SeasonalityResponse(
-    [property: JsonPropertyName("daily")] List<double>? Daily,
-    [property: JsonPropertyName("weekly")] List<double>? Weekly,
-    [property: JsonPropertyName("monthly")]
-    List<double>? Monthly,
-    [property: JsonPropertyName("yearly")] List<double>? Yearly);
+namespace EpochFlow.ApiClient.Analytics
+{
+    public class SeasonalityResponse
+    {
+        [JsonPropertyName("daily")] public List<double>? Daily { get; set; }
+        [JsonPropertyName("weekly")] public List<double>? Weekly { get; set; }
+        [JsonPropertyName("monthly")] public List<double>? Monthly { get; set; }
+        [JsonPropertyName("yearly")] public List<double>? Yearly { get; set; }
+    }
+}

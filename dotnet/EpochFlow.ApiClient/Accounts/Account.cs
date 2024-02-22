@@ -1,6 +1,11 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace EpochFlow.ApiClient.Accounts;
+namespace EpochFlow.ApiClient.Accounts
+{
+    public class Account
+    {
+        [JsonPropertyName("id")] public string Id { get; set; } = string.Empty;
 
-public record Account([property: JsonPropertyName("id")] string Id,
-    [property: JsonPropertyName("name")] string Name);
+        [JsonPropertyName("name")] public string Name { get; set; } = string.Empty;
+    }
+}

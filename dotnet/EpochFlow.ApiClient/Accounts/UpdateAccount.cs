@@ -2,21 +2,22 @@
 using System.Text.Json.Serialization;
 using Refit;
 
-namespace EpochFlow.ApiClient.Accounts;
-
-public class UpdateAccount
+namespace EpochFlow.ApiClient.Accounts
 {
-    [JsonPropertyName("name")]
-    [AliasAs("name")]
-    [MinLength(3)]
-    [MaxLength(255)]
-    public string Name { get; set; } = string.Empty;
-
-    public static UpdateAccount Create(string name)
+    public class UpdateAccount
     {
-        return new UpdateAccount
+        [JsonPropertyName("name")]
+        [AliasAs("name")]
+        [MinLength(3)]
+        [MaxLength(255)]
+        public string Name { get; set; } = string.Empty;
+
+        public static UpdateAccount Create(string name)
         {
-            Name = name
-        };
+            return new UpdateAccount
+            {
+                Name = name
+            };
+        }
     }
 }

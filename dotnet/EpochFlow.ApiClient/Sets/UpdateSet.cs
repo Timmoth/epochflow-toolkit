@@ -3,26 +3,27 @@ using System.Text.Json.Serialization;
 using EpochFlow.ApiClient.Analytics;
 using Refit;
 
-namespace EpochFlow.ApiClient.Sets;
-
-public class UpdateSet
+namespace EpochFlow.ApiClient.Sets
 {
-    [JsonPropertyName("name")]
-    [AliasAs("name")]
-    [MinLength(3)]
-    [MaxLength(255)]
-    public string Name { get; set; } = string.Empty;
-
-    [JsonPropertyName("analytics")]
-    [AliasAs("analytics")]
-    public AnalyticsConfig? AnalyticsConfig { get; set; }
-
-    public static UpdateSet Create(string name, AnalyticsConfig? analyticsConfig = null)
+    public class UpdateSet
     {
-        return new UpdateSet
+        [JsonPropertyName("name")]
+        [AliasAs("name")]
+        [MinLength(3)]
+        [MaxLength(255)]
+        public string Name { get; set; } = string.Empty;
+
+        [JsonPropertyName("analytics")]
+        [AliasAs("analytics")]
+        public AnalyticsConfig? AnalyticsConfig { get; set; }
+
+        public static UpdateSet Create(string name, AnalyticsConfig? analyticsConfig = null)
         {
-            Name = name,
-            AnalyticsConfig = analyticsConfig
-        };
+            return new UpdateSet
+            {
+                Name = name,
+                AnalyticsConfig = analyticsConfig
+            };
+        }
     }
 }

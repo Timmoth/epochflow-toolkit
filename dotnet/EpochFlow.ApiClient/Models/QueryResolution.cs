@@ -1,12 +1,13 @@
 using System.Text.Json.Serialization;
 
-namespace EpochFlow.ApiClient.Models;
-
-[JsonConverter(typeof(JsonStringEnumConverter))]
-public enum QueryResolution
+namespace EpochFlow.ApiClient.Models
 {
-    Default,
-    Minute,
-    Hour,
-    Day
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public enum QueryResolution
+    {
+        Default,
+        Minute,
+        Hour,
+        Day
+    }
 }
