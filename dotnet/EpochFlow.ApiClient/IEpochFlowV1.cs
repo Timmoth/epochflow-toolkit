@@ -74,7 +74,7 @@ namespace EpochFlow.ApiClient
         #region Api keys
 
         [Get("/api/v1/accounts/keys/{keyName}")]
-        public Task<ApiResponse<ApiKeyResponse>> GetApiKey(string keyName);
+        public Task<ApiResponse<ApiKey>> GetApiKey(string keyName);
 
         [Delete("/api/v1/accounts/keys/{keyName}")]
         public Task<HttpResponseMessage> DeleteApiKey(string keyName);
@@ -83,7 +83,7 @@ namespace EpochFlow.ApiClient
         public Task<ApiResponse<string>> CreateApiKey([Body] CreateApiKey request);
 
         [Get("/api/v1/accounts/keys")]
-        public Task<ApiResponse<List<ApiKeyResponse>>> ListApiKeys();
+        public Task<ApiResponse<List<ApiKey>>> ListApiKeys();
 
         [Post("/api/v1/accounts/keys/{keyName}/enable")]
         public Task<HttpResponseMessage> EnableApiKey(string keyName);

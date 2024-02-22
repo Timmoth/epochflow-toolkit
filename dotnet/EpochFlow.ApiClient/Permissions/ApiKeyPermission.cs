@@ -10,7 +10,7 @@ public enum AllowedOperations
     Write = 2
 }
 
-public class ApiKeyPermissionResponse
+public class ApiKeyPermission
 {
     [JsonPropertyName("set_id")] public string SetId { get; set; } = string.Empty;
 

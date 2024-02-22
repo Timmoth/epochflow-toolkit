@@ -8,5 +8,5 @@ public class CreateApiKey
     [JsonPropertyName("key_name")] public string KeyName { get; set; } = string.Empty;
     [JsonPropertyName("is_admin")] public bool IsAdmin { get; set; }
     [JsonPropertyName("all_set_operations")] public AllowedOperations AllSetOperations { get; set; }
-    [JsonPropertyName("permissions")] public List<ApiKeyPermissionResponse> Permissions { get; set; } = new();
+    [JsonPropertyName("permissions")] public List<ApiKeyPermission> Permissions { get; set; } = new();
 }

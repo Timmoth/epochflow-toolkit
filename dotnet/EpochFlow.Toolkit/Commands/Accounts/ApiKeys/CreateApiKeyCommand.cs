@@ -35,7 +35,7 @@ public sealed class CreateApiKeyCommand : AsyncCommand<CreateApiKeyCommand.Setti
 
         long? expiresAt = settings.ExpiresAt == null ? null : new DateTimeOffset(settings.ExpiresAt.Value).ToUnixTimeSeconds();
 
-        var permissions = new List<ApiKeyPermissionResponse>();
+        var permissions = new List<ApiKeyPermission>();
         foreach (var section in settings.Permissions.Split("&"))
         {
             var subSections = section.Split(";").ToList();
@@ -56,7 +56,7 @@ public sealed class CreateApiKeyCommand : AsyncCommand<CreateApiKeyCommand.Setti
                 operations |= AllowedOperations.Write;
             }
 
-            permissions.Add(new ApiKeyPermissionResponse()
+            permissions.Add(new ApiKeyPermission()
             {
                 SetId = subSections[0],
                 AllTags = allTags,
