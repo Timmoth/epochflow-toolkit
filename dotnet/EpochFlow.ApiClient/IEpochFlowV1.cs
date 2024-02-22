@@ -2,6 +2,7 @@
 using EpochFlow.ApiClient.Analytics;
 using EpochFlow.ApiClient.Data;
 using EpochFlow.ApiClient.Models;
+using EpochFlow.ApiClient.Permissions;
 using EpochFlow.ApiClient.Sets;
 using EpochFlow.ApiClient.Webhooks;
 using Refit;
@@ -40,9 +41,6 @@ namespace EpochFlow.ApiClient
 
         #region Account
 
-        [Post("/api/v1/accounts/{id}/apikey")]
-        public Task<ApiResponse<string>> ResetApiKey(string id);
-
         [Patch("/api/v1/accounts")]
         public Task<ApiResponse<Account>> UpdateAccount(UpdateAccount request);
 
@@ -70,6 +68,28 @@ namespace EpochFlow.ApiClient
 
         [Get("/api/v1/sets")]
         public Task<ApiResponse<List<Set>>> ListSets();
+
+        #endregion
+
+        #region Api keys
+
+        [Get("/api/v1/accounts/keys/{keyName}")]
+        public Task<ApiResponse<ApiKeyResponse>> GetApiKey(string keyName);
+
+        [Delete("/api/v1/accounts/keys/{keyName}")]
+        public Task<HttpResponseMessage> DeleteApiKey(string keyName);
+
+        [Post("/api/v1/accounts/keys")]
+        public Task<ApiResponse<string>> CreateApiKey([Body] CreateApiKey request);
+
+        [Get("/api/v1/accounts/keys")]
+        public Task<ApiResponse<List<ApiKeyResponse>>> ListApiKeys();
+
+        [Post("/api/v1/accounts/keys/{keyName}/enable")]
+        public Task<HttpResponseMessage> EnableApiKey(string keyName);
+
+        [Post("/api/v1/accounts/keys/{keyName}/disable")]
+        public Task<HttpResponseMessage> DisableApiKey(string keyName);
 
         #endregion
 

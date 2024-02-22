@@ -1,4 +1,5 @@
 ﻿using EpochFlow.Toolkit.Commands.Accounts;
+using EpochFlow.Toolkit.Commands.Accounts.ApiKeys;
 using EpochFlow.Toolkit.Commands.Sets;
 using EpochFlow.Toolkit.Commands.Sets.Data;
 using EpochFlow.Toolkit.Commands.Sets.Tags;
@@ -33,8 +34,24 @@ internal class Program
             config.AddCommand<DeleteSetCommand>("delete-set")
                 .WithDescription("Deletes a set.");
             config.AddCommand<ListSetsCommand>("list-sets")
-                .WithDescription("List a sets.");
+                .WithDescription("List sets.");
 
+            #endregion
+
+            #region ApiKeys
+
+            config.AddCommand<CreateApiKeyCommand>("create-key")
+                .WithDescription("Creates a new api key.");
+            config.AddCommand<GetApiKeyCommand>("get-key")
+                .WithDescription("Gets a api key.");
+            config.AddCommand<DeleteApiKeyCommand>("delete-key")
+                .WithDescription("Deletes a api key.");
+            config.AddCommand<ListApiKeysCommand>("list-keys")
+                .WithDescription("List api keys.");
+            config.AddCommand<EnableApiKeyCommand>("enable-key")
+                .WithDescription("Enable api key.");
+            config.AddCommand<DisableApiKeyCommand>("disable-key")
+                .WithDescription("Disable api key.");
             #endregion
 
             #region Tags

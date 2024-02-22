@@ -93,4 +93,14 @@ export epochflow_key="<api_key>"
 
 # Data
 ./epoch get-data --id "<set_id>" --tag "<tag_name_1,tag_name_2>"
+
+# Api Keys
+./epoch create-key --name "<key_name>" --expiry "<datetime>" --admin "<True|False>" --all_set_operations "<Undefined | Read | Write>" --permissions "set_1_id;tag1,tag2;read,write&set_2_id;all;read"
+./epoch get-key --id "<key_id>"
+./epoch list-keys
+./epoch enable-key --id "<key_id>"
+./epoch disable-key --id "<key_id>"
+./epoch delete-key --id "<key_id>"
+
+
 ```
