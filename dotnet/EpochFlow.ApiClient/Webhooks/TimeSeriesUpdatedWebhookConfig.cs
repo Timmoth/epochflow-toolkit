@@ -2,6 +2,14 @@
 
 namespace EpochFlow.ApiClient.Webhooks
 {
+    public class WebhookModel
+    {
+
+        [JsonPropertyName("timeseries_update_webhook")]
+        public TimeSeriesUpdatedWebhookConfig? TimeSeriesUpdateWebhook { get; set; } = null;
+
+    }
+
     public class TimeSeriesUpdatedWebhookConfig
     {
         [JsonPropertyName("url")] public string Url { get; set; } = string.Empty;

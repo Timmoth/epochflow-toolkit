@@ -16,8 +16,8 @@ namespace EpochFlow.ApiClient
         [Delete("/api/v1/sets/{id}/webhooks/timeseries_updated")]
         public Task<HttpResponseMessage> DeleteTimeSeriesUpdatedWebhook(string id);
 
-        [Get("/api/v1/sets/{id}/webhooks/timeseries_updated")]
-        public Task<ApiResponse<TimeSeriesUpdatedWebhookConfig>> GetTimeSeriesUpdatedWebhook(string id);
+        [Get("/api/v1/sets/{id}/webhooks")]
+        public Task<ApiResponse<WebhookModel>> GetWebhooks(string id);
 
         [Post("/api/v1/sets/{id}/webhooks/timeseries_updated")]
         public Task<ApiResponse<TimeSeriesUpdatedWebhookConfig>> CreateTimeSeriesUpdatedWebhook(string id,
