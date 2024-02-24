@@ -7,6 +7,8 @@ namespace EpochFlow.ApiClient.Analytics
 {
     public class GetAnalytics
     {
+        public static readonly string[] AnalyticsValues = new[] { "actual_value", "actual_rolling", "predicted_value", "predicted_rolling", "delta_predicted", "delta_predicted_rolling" };
+
         [JsonPropertyName("start")]
         [AliasAs("start")]
         [Range(0, long.MaxValue)]
@@ -25,14 +27,19 @@ namespace EpochFlow.ApiClient.Analytics
         [AliasAs("resolution")]
         public QueryResolution? Resolution { get; set; }
 
-        public static GetAnalytics Create(long start, long end, string tag, QueryResolution? resolution = null)
+        [JsonPropertyName("values")]
+        [AliasAs("values")]
+        public string[] Values { get; set; } = new string[] { };
+
+        public static GetAnalytics Create(long start, long end, string tag, string[] values, QueryResolution? resolution = null)
         {
             return new GetAnalytics
             {
                 Start = start,
                 End = end,
                 Tag = tag,
-                Resolution = resolution
+                Resolution = resolution,
+                Values = values,
             };
         }
 
