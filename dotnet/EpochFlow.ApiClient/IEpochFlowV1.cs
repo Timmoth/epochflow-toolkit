@@ -112,7 +112,15 @@ namespace EpochFlow.ApiClient
         public Task<ApiResponse<AnalyticsData>> GetAnalytics(string id,
             [Query] GetAnalytics request);
 
-        [Get("/api/v1/sets/{id}/data/anomalies")]
+        [Get("/api/v1/sets/{id}/data/analytics/downtime")]
+        public Task<ApiResponse<List<long>>> GetDowntime(string id,
+            [Query][AliasAs("start")] long startParam,
+            [Query][AliasAs("end")] long endParam,
+            [Query][AliasAs("tag")] string tag,
+            [Query][AliasAs("resolution")] QueryResolution? resolution
+        );
+
+        [Get("/api/v1/sets/{id}/data/analytics/anomalies")]
         public Task<ApiResponse<List<DataPoint>>> GetAnomalies(string id,
             [Query] [AliasAs("start")] long? startParam,
             [Query] [AliasAs("end")] long? endParam,
@@ -120,16 +128,16 @@ namespace EpochFlow.ApiClient
             [Query] [AliasAs("resolution")] QueryResolution? resolution
         );
 
-        [Get("/api/v1/sets/{id}/data/seasonality")]
+        [Get("/api/v1/sets/{id}/data/analytics/seasonality")]
         public Task<ApiResponse<SeasonalityResponse>> GetSeasonality(string id,
             [Query] [AliasAs("tag")] string tag
         );
 
-        [Get("/api/v1/sets/{id}/data/latest")]
+        [Get("/api/v1/sets/{id}/data/analytics/latest")]
         public Task<ApiResponse<LatestDataPoints>> GetLatest(string id,
             [Query] GetLatestRequest request);
 
-        [Get("/api/v1/sets/{id}/data/total")]
+        [Get("/api/v1/sets/{id}/data/analytics/total")]
         public Task<ApiResponse<List<TagTotals>>> GetTotal(string id, [Query] GetTotalRequest request);
 
         [Post("/api/v1/sets/{id}/data")]

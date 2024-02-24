@@ -45,7 +45,7 @@ namespace EpochFlow.ApiClient.Analytics
 
         protected bool Equals(GetAnalytics other)
         {
-            return Start == other.Start && End == other.End && Tag == other.Tag && Resolution == other.Resolution;
+            return Start == other.Start && End == other.End && Tag == other.Tag && Values.SequenceEqual(other.Values) && Resolution == other.Resolution;
         }
 
         public override bool Equals(object? obj)
@@ -61,7 +61,7 @@ namespace EpochFlow.ApiClient.Analytics
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Start, End, Tag, Resolution);
+            return HashCode.Combine(Start, End, Tag, Values, Resolution);
         }
     }
 }
