@@ -7,7 +7,7 @@ namespace EpochFlow.ApiClient.Analytics
 {
     public class GetAnalytics
     {
-        public static readonly string[] AnalyticsValues = new[] { "actual_value", "actual_rolling", "predicted_value", "predicted_rolling", "delta_predicted", "delta_predicted_rolling" };
+        public static readonly string[] AnalyticsValues = new[] { "actual", "trend", "seasonal", "residual" };
 
         [JsonPropertyName("start")]
         [AliasAs("start")]

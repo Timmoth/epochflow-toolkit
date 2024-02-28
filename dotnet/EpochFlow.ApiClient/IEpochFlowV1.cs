@@ -108,12 +108,12 @@ namespace EpochFlow.ApiClient
         public Task<ApiResponse<List<ResponseDataPoint>>> GetData(string id,
             [Query] GetDataRequest request);
 
-        [Get("/api/v1/sets/{id}/data/analytics")]
-        public Task<ApiResponse<AnalyticsData>> GetAnalytics(string id,
+        [Get("/api/v1/sets/{id}/data/analytics/seasonality")]
+        public Task<ApiResponse<List<double[]>>> GetAnalytics(string id,
             [Query] GetAnalytics request);
 
         [Get("/api/v1/sets/{id}/data/analytics/downtime")]
-        public Task<ApiResponse<List<long>>> GetDowntime(string id,
+        public Task<ApiResponse<long[]>> GetDowntime(string id,
             [Query][AliasAs("start")] long startParam,
             [Query][AliasAs("end")] long endParam,
             [Query][AliasAs("tag")] string tag,
@@ -121,11 +121,11 @@ namespace EpochFlow.ApiClient
         );
 
         [Get("/api/v1/sets/{id}/data/analytics/anomalies")]
-        public Task<ApiResponse<List<DataPoint>>> GetAnomalies(string id,
-            [Query] [AliasAs("start")] long? startParam,
-            [Query] [AliasAs("end")] long? endParam,
+        public Task<ApiResponse<List<double[]>>> GetAnomalies(string id,
+            [Query] [AliasAs("start")] long startParam,
+            [Query] [AliasAs("end")] long endParam,
             [Query] [AliasAs("tag")] string tag,
-            [Query] [AliasAs("resolution")] QueryResolution? resolution
+            [Query] [AliasAs("resolution")] QueryResolution resolution
         );
 
         [Get("/api/v1/sets/{id}/data/analytics/seasonality")]
