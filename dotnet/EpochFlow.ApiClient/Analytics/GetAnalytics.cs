@@ -7,8 +7,6 @@ namespace EpochFlow.ApiClient.Analytics
 {
     public class GetAnalytics
     {
-        public static readonly string[] AnalyticsValues = new[] { "actual", "trend", "seasonal", "residual" };
-
         [JsonPropertyName("start")]
         [AliasAs("start")]
         [Range(0, long.MaxValue)]
@@ -27,11 +25,7 @@ namespace EpochFlow.ApiClient.Analytics
         [AliasAs("resolution")]
         public QueryResolution? Resolution { get; set; }
 
-        [JsonPropertyName("values")]
-        [AliasAs("values")]
-        public string[] Values { get; set; } = new string[] { };
-
-        public static GetAnalytics Create(long start, long end, string tag, string[] values, QueryResolution? resolution = null)
+        public static GetAnalytics Create(long start, long end, string tag, QueryResolution? resolution = null)
         {
             return new GetAnalytics
             {
@@ -39,13 +33,12 @@ namespace EpochFlow.ApiClient.Analytics
                 End = end,
                 Tag = tag,
                 Resolution = resolution,
-                Values = values,
             };
         }
 
         protected bool Equals(GetAnalytics other)
         {
-            return Start == other.Start && End == other.End && Tag == other.Tag && Values.SequenceEqual(other.Values) && Resolution == other.Resolution;
+            return Start == other.Start && End == other.End && Tag == other.Tag && Resolution == other.Resolution;
         }
 
         public override bool Equals(object? obj)
@@ -61,7 +54,7 @@ namespace EpochFlow.ApiClient.Analytics
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Start, End, Tag, Values, Resolution);
+            return HashCode.Combine(Start, End, Tag, Resolution);
         }
     }
 }

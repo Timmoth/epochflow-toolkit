@@ -8,6 +8,8 @@ namespace EpochFlow.ApiClient.Models
         Default,
         Minute,
         Hour,
-        Day
+        Day,
+        Week,
+        Month
     }
 }

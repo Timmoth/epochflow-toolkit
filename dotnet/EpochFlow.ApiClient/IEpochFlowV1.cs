@@ -105,27 +105,24 @@ namespace EpochFlow.ApiClient
             CancellationToken cancellationToken = default);
 
         [Get("/api/v1/sets/{id}/data")]
-        public Task<ApiResponse<List<ResponseDataPoint>>> GetData(string id,
+        public Task<ApiResponse<List<double[]>>> GetData(string id,
             [Query] GetDataRequest request);
 
-        [Get("/api/v1/sets/{id}/data/analytics/seasonality")]
-        public Task<ApiResponse<List<double[]>>> GetAnalytics(string id,
-            [Query] GetAnalytics request);
+        [Get("/api/v1/sets/{id}/data/analytics/predicted")]
+        public Task<ApiResponse<List<double[]>>> GetPrediction(string id,
+            [Query] GetDataRequest request);
 
         [Get("/api/v1/sets/{id}/data/analytics/downtime")]
         public Task<ApiResponse<long[]>> GetDowntime(string id,
             [Query][AliasAs("start")] long startParam,
             [Query][AliasAs("end")] long endParam,
             [Query][AliasAs("tag")] string tag,
-            [Query][AliasAs("resolution")] QueryResolution? resolution
+            [Query][AliasAs("resolution")] QueryResolution resolution
         );
 
         [Get("/api/v1/sets/{id}/data/analytics/anomalies")]
         public Task<ApiResponse<List<double[]>>> GetAnomalies(string id,
-            [Query] [AliasAs("start")] long startParam,
-            [Query] [AliasAs("end")] long endParam,
-            [Query] [AliasAs("tag")] string tag,
-            [Query] [AliasAs("resolution")] QueryResolution resolution
+            [Query] GetDataRequest request
         );
 
         [Get("/api/v1/sets/{id}/data/analytics/seasonality")]

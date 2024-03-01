@@ -17,28 +17,26 @@ namespace EpochFlow.ApiClient.Data
         [Range(0, long.MaxValue)]
         public long End { get; set; }
 
-        [JsonPropertyName("tags")]
-        [AliasAs("tags")]
-        [MinLength(0)]
-        [MaxLength(10)]
-        public List<string>? Tags { get; set; }
+        [JsonPropertyName("tag")]
+        [AliasAs("tag")]
+        public string Tag { get; set; } = string.Empty;
 
         [JsonPropertyName("resolution")]
         [AliasAs("resolution")]
-        public QueryResolution? Resolution { get; set; }
+        public QueryResolution Resolution { get; set; }
 
         [JsonPropertyName("aggregation")]
         [AliasAs("aggregation")]
-        public QueryAggregation? Aggregation { get; set; }
+        public QueryAggregation Aggregation { get; set; }
 
-        public static GetDataRequest Create(long start, long end, List<string>? tags = null,
-            QueryResolution? resolution = null, QueryAggregation? queryAggregation = null)
+        public static GetDataRequest Create(long start, long end, string tag,
+            QueryResolution resolution, QueryAggregation queryAggregation)
         {
             return new GetDataRequest
             {
                 Start = start,
                 End = end,
-                Tags = tags,
+                Tag = tag,
                 Resolution = resolution,
                 Aggregation = queryAggregation
             };
@@ -46,8 +44,8 @@ namespace EpochFlow.ApiClient.Data
 
         protected bool Equals(GetDataRequest other)
         {
-            return Start == other.Start && End == other.End && Equals(Tags, other.Tags) &&
-                   Resolution == other.Resolution;
+            return Start == other.Start && End == other.End && Equals(Tag, other.Tag) &&
+                   Resolution == other.Resolution && Aggregation == other.Aggregation;
         }
 
         public override bool Equals(object? obj)
@@ -63,7 +61,7 @@ namespace EpochFlow.ApiClient.Data
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Start, End, Tags, Resolution);
+            return HashCode.Combine(Start, End, Tag, Resolution, Aggregation);
         }
     }
 }
