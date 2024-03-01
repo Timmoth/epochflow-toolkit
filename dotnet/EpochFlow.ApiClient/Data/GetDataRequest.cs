@@ -5,48 +5,6 @@ using Refit;
 
 namespace EpochFlow.ApiClient.Data
 {
-    public enum QueryFilterComparison
-    {
-        gt, gte, lt, lte, e
-    }
-    public enum QueryFilterProperty
-    {
-        Value, HourOfDay, DayOfWeek, DayOfMonth, DayOfYear, Year, Month
-    }
-
-    public class QueryFilter
-    {
-        [JsonPropertyName("operator")]
-        public QueryFilterComparison Comparison { get; set; }
-
-        [JsonPropertyName("prop")]
-        public QueryFilterProperty Property { get; set; }
-
-        [JsonPropertyName("value")]
-        public double Value { get; set; }
-
-        protected bool Equals(QueryFilter other)
-        {
-            return Comparison == other.Comparison && Property == other.Property && Math.Abs(Value - other.Value) < 0.01;
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-
-            if (ReferenceEquals(this, obj)) return true;
-
-            if (obj.GetType() != GetType()) return false;
-
-            return Equals((QueryFilter)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Property, Comparison, Math.Round(Value, 10));
-        }
-    }
-
     public class GetDataRequest
     {
         [JsonPropertyName("start")]
@@ -73,7 +31,7 @@ namespace EpochFlow.ApiClient.Data
 
         [JsonPropertyName("filters")]
         [AliasAs("filters")]
-        public List<QueryFilter> Filters { get; set; } = new List<QueryFilter>();
+        public List<string> Filters { get; set; } = new List<string>();
 
         public static GetDataRequest Create(long start, long end, string tag,
             QueryResolution resolution, QueryAggregation queryAggregation, List<QueryFilter> filters)
@@ -85,7 +43,7 @@ namespace EpochFlow.ApiClient.Data
                 Tag = tag,
                 Resolution = resolution,
                 Aggregation = queryAggregation,
-                Filters = filters
+                Filters = filters.Select(f => f.Encode()).ToList()
             };
         }
 
