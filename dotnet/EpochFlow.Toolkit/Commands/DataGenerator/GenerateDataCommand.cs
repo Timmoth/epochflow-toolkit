@@ -1,25 +1,22 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
-using System.Text.Json;
 using EpochFlow.ApiClient;
 using EpochFlow.ApiClient.Data;
-using EpochFlow.ApiClient.Models;
 using EpochFlow.ApiClient.Utilities;
-using EpochFlow.Toolkit.Commands.Accounts.ApiKeys;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Refit;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
-namespace EpochFlow.Toolkit.Commands.Sets.Data;
+namespace EpochFlow.Toolkit.Commands.DataGenerator;
 
-public sealed class GetDataCommand : AsyncCommand<GetDataCommand.Settings>
+public sealed class GenerateDataCommand : AsyncCommand<GenerateDataCommand.Settings>
 {
-    private readonly ILogger<GetDataCommand> _logger;
+    private readonly ILogger<GenerateDataCommand> _logger;
     private readonly IServiceProvider _serviceProvider;
 
-    public GetDataCommand(ILogger<GetDataCommand> logger, IServiceProvider serviceProvider)
+    public GenerateDataCommand(ILogger<GenerateDataCommand> logger, IServiceProvider serviceProvider)
     {
         _logger = logger;
         _serviceProvider = serviceProvider;
@@ -35,44 +32,36 @@ public sealed class GetDataCommand : AsyncCommand<GetDataCommand.Settings>
 
         var epochFlowApi = RestService.For<IEpochFlowV1>(httpClient, new RefitSettings());
 
-        var start = new DateTimeOffset(settings.Start).ToUnixTimeSeconds();
-        var end = new DateTimeOffset(settings.End).ToUnixTimeSeconds();
+        for (var i = 0; i < 30; i++)
+        {
+            var stopwatch = Stopwatch.StartNew();
+            var response = await epochFlowApi.PostDataPoint(settings.SetId,
+                new Measurement(DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
+                Random.Shared.NextDouble(),
+                new List<string>(){ settings.Tag }));
 
-        var stopwatch = Stopwatch.StartNew();
-        var response = await epochFlowApi.GetData(settings.SetId, GetDataRequest.Create(start, end, settings.Tag, QueryResolution.Hour, QueryAggregation.Average, new List<QueryFilter>()));
-        stopwatch.Stop();
-        _logger.LogInformation(
-            "Completed with status code: status code: [{StatusCode}] in {Duration}ms",
-            response.StatusCode,
-            stopwatch.ElapsedMilliseconds);
+            stopwatch.Stop();
+            _logger.LogInformation(
+                "Completed with status code: status code: [{StatusCode}] in {Duration}ms",
+                response.StatusCode,
+                stopwatch.ElapsedMilliseconds);
 
-        if (response.IsSuccessStatusCode && response.Content != null)
-            _logger.LogInformation(JsonSerializer.Serialize(response.Content, new JsonSerializerOptions
-            {
-                WriteIndented = true
-            }));
-        else
             _logger.LogIfError(response);
+
+            await Task.Delay(10000);
+        }
+
         return 0;
     }
 
     public sealed class Settings : EpochFlowBaseSettings
     {
-      
         [CommandOption("--id")]
         [Description("Set Id")]
         public string SetId { get; set; } = string.Empty;
 
-        [CommandOption("--start")]
-        [Description("Start datetime")]
-        public DateTime Start { get; set; } = DateTime.Now.AddMonths(-1);
-
-        [CommandOption("--end")]
-        [Description("End datetime")]
-        public DateTime End { get; set; } = DateTime.Now;
-
         [CommandOption("--tag")]
-        [Description("Tag")]
+        [Description("Tag name")]
         public string Tag { get; set; } = string.Empty;
 
         public override ValidationResult Validate()
@@ -84,6 +73,8 @@ public sealed class GetDataCommand : AsyncCommand<GetDataCommand.Settings>
             }
 
             if (string.IsNullOrWhiteSpace(SetId)) return ValidationResult.Error("Specify Set Id with '--id'");
+
+            if (string.IsNullOrWhiteSpace(Tag)) return ValidationResult.Error("Specify Tag name with '--tag'");
 
             return ValidationResult.Success();
         }

@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using EpochFlow.ApiClient;
 using EpochFlow.ApiClient.Utilities;
+using EpochFlow.Toolkit.Commands.Accounts.ApiKeys;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Refit;
@@ -44,48 +45,18 @@ public sealed class DeleteSetCommand : AsyncCommand<DeleteSetCommand.Settings>
         return 0;
     }
 
-    public sealed class Settings : CommandSettings
+    public sealed class Settings : EpochFlowBaseSettings
     {
-        [CommandOption("--url")]
-        [Description("API Url")]
-        public string ApiUrl { get; set; } = string.Empty;
-
-        [CommandOption("--account")]
-        [Description("Account Id")]
-        public string AccountId { get; set; } = string.Empty;
-
-        [CommandOption("--key")]
-        [Description("API key")]
-        public string ApiKey { get; set; } = string.Empty;
-
         [CommandOption("--id")]
         [Description("Set Id")]
         public string SetId { get; set; } = string.Empty;
 
         public override ValidationResult Validate()
         {
-            if (string.IsNullOrWhiteSpace(ApiUrl))
+            var baseValidationResult = base.Validate();
+            if (!baseValidationResult.Successful)
             {
-                ApiUrl = Environment.GetEnvironmentVariable("epochflow_url") ?? string.Empty;
-                if (string.IsNullOrWhiteSpace(ApiUrl))
-                    return ValidationResult.Error(
-                        "Specify Api url with '--url' or 'epochflow_url' environment variable.");
-            }
-
-            if (string.IsNullOrWhiteSpace(AccountId))
-            {
-                AccountId = Environment.GetEnvironmentVariable("epochflow_account") ?? string.Empty;
-                if (string.IsNullOrWhiteSpace(AccountId))
-                    return ValidationResult.Error(
-                        "Specify Account Id with '--account' or 'epochflow_account' environment variable.");
-            }
-
-            if (string.IsNullOrWhiteSpace(ApiKey))
-            {
-                ApiKey = Environment.GetEnvironmentVariable("epochflow_key") ?? string.Empty;
-                if (string.IsNullOrWhiteSpace(ApiKey))
-                    return ValidationResult.Error(
-                        "Specify Api Key with '--key' or 'epochflow_key' environment variable.");
+                return baseValidationResult;
             }
 
             if (string.IsNullOrWhiteSpace(SetId)) return ValidationResult.Error("Specify Set Id with '--id'");

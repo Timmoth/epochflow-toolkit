@@ -12,7 +12,7 @@ using Spectre.Console.Cli;
 
 namespace EpochFlow.Toolkit.Commands.Accounts.ApiKeys;
 
-public sealed class CreateApiKeyCommand : AsyncCommand<CreateApiKeyCommand.Settings>
+    public sealed class CreateApiKeyCommand : AsyncCommand<CreateApiKeyCommand.Settings>
 {
     private readonly ILogger<CreateApiKeyCommand> _logger;
     private readonly IServiceProvider _serviceProvider;
@@ -91,20 +91,9 @@ public sealed class CreateApiKeyCommand : AsyncCommand<CreateApiKeyCommand.Setti
         return 0;
     }
 
-    public sealed class Settings : CommandSettings
-    {
-        [CommandOption("--url")]
-        [Description("API Url")]
-        public string ApiUrl { get; set; } = string.Empty;
-
-        [CommandOption("--account")]
-        [Description("Account Id")]
-        public string AccountId { get; set; } = string.Empty;
-
-        [CommandOption("--key")]
-        [Description("API key")]
-        public string ApiKey { get; set; } = string.Empty;
-
+    public sealed class Settings : EpochFlowBaseSettings
+        {
+     
         [CommandOption("--name")]
         [Description("Key name")]
         public string KeyName { get; set; } = string.Empty;
@@ -127,30 +116,11 @@ public sealed class CreateApiKeyCommand : AsyncCommand<CreateApiKeyCommand.Setti
 
         public override ValidationResult Validate()
         {
-            if (string.IsNullOrWhiteSpace(ApiUrl))
+            var baseValidationResult = base.Validate();
+            if (!baseValidationResult.Successful)
             {
-                ApiUrl = Environment.GetEnvironmentVariable("epochflow_url") ?? string.Empty;
-                if (string.IsNullOrWhiteSpace(ApiUrl))
-                    return ValidationResult.Error(
-                        "Specify Api url with '--url' or set 'epochflow_url' environment variable.");
+                return baseValidationResult;
             }
-
-            if (string.IsNullOrWhiteSpace(AccountId))
-            {
-                AccountId = Environment.GetEnvironmentVariable("epochflow_account") ?? string.Empty;
-                if (string.IsNullOrWhiteSpace(AccountId))
-                    return ValidationResult.Error(
-                        "Specify Account Id with '--account' or set 'epochflow_account' environment variable.");
-            }
-
-            if (string.IsNullOrWhiteSpace(ApiKey))
-            {
-                ApiKey = Environment.GetEnvironmentVariable("epochflow_key") ?? string.Empty;
-                if (string.IsNullOrWhiteSpace(ApiKey))
-                    return ValidationResult.Error(
-                        "Specify Api Key with '--key' or set 'epochflow_key' environment variable.");
-            }
-
             if (string.IsNullOrWhiteSpace(KeyName)) return ValidationResult.Error("Specify Key name with '--name'");
 
             if (KeyName.Length <= 3) return ValidationResult.Error("Key name must be at least three characters.");
