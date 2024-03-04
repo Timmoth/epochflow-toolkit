@@ -5,6 +5,14 @@ Repo containing public tools &amp; samples for EpochFlow
 ## Links
 [App](https://app.epochflow.io/) • [Docs](https://docs.epochflow.io/) • [Swagger Api](https://api.epochflow.io/swagger/index.html)
 
+## Emulator
+
+This [docker image](https://hub.docker.com/r/aptacode/epochflow-emulator) provides a light weight in memory emulator for the API which can be easily ran locally for development or part of your CICD pipeline for integration tests.
+
+```
+docker run -p 8085:8080 aptacode/epochflow:latest
+```
+
 ## Nuget package
 
 This [nuget package](https://www.nuget.org/packages/Epochflow/) contains all the classes needed to integrate Epoch flow into your dotnet Api.
@@ -37,13 +45,28 @@ public async Task Load(){
 }
 ```
 
+Alternatively, if you don't want to configure DI
+```csharp
+var httpClient = new HttpClient();
+httpClient.BaseAddress = new Uri(EpochFlowApiUrl);
+httpClient.DefaultRequestHeaders.Add("X-API-Key'", EpochFlowApiKey);
+httpClient.DefaultRequestHeaders.Add("X-Account-Id", EpochFlowAccountId);
+
+var epochFlowApi = RestService.For<IEpochFlowV1>(httpClient);
+var result = await epochFlowApi.PostDataPoints(EpochFlowSetId, measurements);
+```
+
 ## Using the CLI toolkit
 
 [Download the latest release for Windows, Linux or Osx](https://github.com/Timmoth/epochflow-toolkit/releases)
 
 ### Configuration
 
-You must configure the cli toolkit with the api url, your account id and api key, there are two ways to do this:
+If you want to target the local emulator specify the '--emulator true' flag.
+```bash
+./epoch get-account --emulator true
+```
+If you want to target the real api you must configure the cli toolkit with the api url, your account id and api key, there are two ways to do this:
 
 #### Parameters
 
