@@ -53,10 +53,7 @@ public sealed class DisableApiKeyCommand : AsyncCommand<DisableApiKeyCommand.Set
         public override ValidationResult Validate()
         {
             var baseValidationResult = base.Validate();
-            if (!baseValidationResult.Successful)
-            {
-                return baseValidationResult;
-            }
+            if (!baseValidationResult.Successful) return baseValidationResult;
 
             if (string.IsNullOrWhiteSpace(Id)) return ValidationResult.Error("Specify Api key id with '--id'");
 

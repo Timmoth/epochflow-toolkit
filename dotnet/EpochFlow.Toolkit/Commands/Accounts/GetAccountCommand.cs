@@ -1,9 +1,7 @@
-﻿using System.ComponentModel;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text.Json;
 using EpochFlow.ApiClient;
 using EpochFlow.ApiClient.Utilities;
-using EpochFlow.Toolkit.Commands.Accounts.ApiKeys;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Refit;
@@ -53,14 +51,10 @@ public sealed class GetAccountCommand : AsyncCommand<GetAccountCommand.Settings>
 
     public sealed class Settings : EpochFlowBaseSettings
     {
-       
         public override ValidationResult Validate()
         {
             var baseValidationResult = base.Validate();
-            if (!baseValidationResult.Successful)
-            {
-                return baseValidationResult;
-            }
+            if (!baseValidationResult.Successful) return baseValidationResult;
 
             return ValidationResult.Success();
         }

@@ -37,8 +37,8 @@ public sealed class GenerateDataCommand : AsyncCommand<GenerateDataCommand.Setti
             var stopwatch = Stopwatch.StartNew();
             var response = await epochFlowApi.PostDataPoint(settings.SetId,
                 new Measurement(DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
-                Random.Shared.NextDouble(),
-                new List<string>(){ settings.Tag }));
+                    Random.Shared.NextDouble(),
+                    new List<string> { settings.Tag }));
 
             stopwatch.Stop();
             _logger.LogInformation(
@@ -67,10 +67,7 @@ public sealed class GenerateDataCommand : AsyncCommand<GenerateDataCommand.Setti
         public override ValidationResult Validate()
         {
             var baseValidationResult = base.Validate();
-            if (!baseValidationResult.Successful)
-            {
-                return baseValidationResult;
-            }
+            if (!baseValidationResult.Successful) return baseValidationResult;
 
             if (string.IsNullOrWhiteSpace(SetId)) return ValidationResult.Error("Specify Set Id with '--id'");
 

@@ -12,7 +12,7 @@ using Spectre.Console.Cli;
 
 namespace EpochFlow.Toolkit.Commands.Accounts.ApiKeys;
 
-    public sealed class CreateApiKeyCommand : AsyncCommand<CreateApiKeyCommand.Settings>
+public sealed class CreateApiKeyCommand : AsyncCommand<CreateApiKeyCommand.Settings>
 {
     private readonly ILogger<CreateApiKeyCommand> _logger;
     private readonly IServiceProvider _serviceProvider;
@@ -33,40 +33,34 @@ namespace EpochFlow.Toolkit.Commands.Accounts.ApiKeys;
 
         var epochFlowApi = RestService.For<IEpochFlowV1>(httpClient, new RefitSettings());
 
-        long? expiresAt = settings.ExpiresAt == null ? null : new DateTimeOffset(settings.ExpiresAt.Value).ToUnixTimeSeconds();
+        long? expiresAt = settings.ExpiresAt == null
+            ? null
+            : new DateTimeOffset(settings.ExpiresAt.Value).ToUnixTimeSeconds();
 
         var permissions = new List<ApiKeyPermission>();
         foreach (var section in settings.Permissions.Split("&"))
         {
             var subSections = section.Split(";").ToList();
             if (subSections.Count != 3)
-            {
                 _logger.LogError("Invalid permissions, must be in format 'set_id;tag1,tag2;read,write'");
-            }
 
             var tags = subSections[1].Split(",").ToList();
             var allTags = tags.Contains("all");
             var operations = AllowedOperations.Undefined;
-            if (subSections[2].Contains("read"))
-            {
-                operations |= AllowedOperations.Read;
-            }
-            if (subSections[2].Contains("write"))
-            {
-                operations |= AllowedOperations.Write;
-            }
+            if (subSections[2].Contains("read")) operations |= AllowedOperations.Read;
+            if (subSections[2].Contains("write")) operations |= AllowedOperations.Write;
 
-            permissions.Add(new ApiKeyPermission()
+            permissions.Add(new ApiKeyPermission
             {
                 SetId = subSections[0],
                 AllTags = allTags,
                 Tags = tags,
-                AllowedOperations = operations,
+                AllowedOperations = operations
             });
         }
 
         var stopwatch = Stopwatch.StartNew();
-        var response = await epochFlowApi.CreateApiKey(new CreateApiKey()
+        var response = await epochFlowApi.CreateApiKey(new CreateApiKey
         {
             IsAdmin = settings.IsAdmin,
             KeyName = settings.KeyName,
@@ -92,8 +86,7 @@ namespace EpochFlow.Toolkit.Commands.Accounts.ApiKeys;
     }
 
     public sealed class Settings : EpochFlowBaseSettings
-        {
-     
+    {
         [CommandOption("--name")]
         [Description("Key name")]
         public string KeyName { get; set; } = string.Empty;
@@ -117,10 +110,7 @@ namespace EpochFlow.Toolkit.Commands.Accounts.ApiKeys;
         public override ValidationResult Validate()
         {
             var baseValidationResult = base.Validate();
-            if (!baseValidationResult.Successful)
-            {
-                return baseValidationResult;
-            }
+            if (!baseValidationResult.Successful) return baseValidationResult;
             if (string.IsNullOrWhiteSpace(KeyName)) return ValidationResult.Error("Specify Key name with '--name'");
 
             if (KeyName.Length <= 3) return ValidationResult.Error("Key name must be at least three characters.");

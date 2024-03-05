@@ -56,20 +56,11 @@ public class GetDataRequest
 
     public override bool Equals(object? obj)
     {
-        if (ReferenceEquals(null, obj))
-        {
-            return false;
-        }
+        if (ReferenceEquals(null, obj)) return false;
 
-        if (ReferenceEquals(this, obj))
-        {
-            return true;
-        }
+        if (ReferenceEquals(this, obj)) return true;
 
-        if (obj.GetType() != GetType())
-        {
-            return false;
-        }
+        if (obj.GetType() != GetType()) return false;
 
         return Equals((GetDataRequest)obj);
     }
@@ -77,10 +68,7 @@ public class GetDataRequest
     public override int GetHashCode()
     {
         var filtersHashCode = 0;
-        foreach (var filter in Filters)
-        {
-            filtersHashCode = HashCode.Combine(filter.GetHashCode(), filtersHashCode);
-        }
+        foreach (var filter in Filters) filtersHashCode = HashCode.Combine(filter.GetHashCode(), filtersHashCode);
 
         return HashCode.Combine(Start, End, Tag, Resolution, Aggregation, filtersHashCode);
     }

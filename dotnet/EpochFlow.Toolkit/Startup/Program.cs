@@ -53,6 +53,7 @@ internal class Program
                 .WithDescription("Enable api key.");
             config.AddCommand<DisableApiKeyCommand>("disable-key")
                 .WithDescription("Disable api key.");
+
             #endregion
 
             #region Tags
@@ -74,8 +75,6 @@ internal class Program
                 .WithDescription("Posts a random measurement every 10 seconds for 5 minutes.");
 
             #endregion
-
-
         });
 
         return app.Run(args);

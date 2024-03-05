@@ -5,7 +5,6 @@ using EpochFlow.ApiClient;
 using EpochFlow.ApiClient.Data;
 using EpochFlow.ApiClient.Models;
 using EpochFlow.ApiClient.Utilities;
-using EpochFlow.Toolkit.Commands.Accounts.ApiKeys;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Refit;
@@ -39,7 +38,9 @@ public sealed class GetDataCommand : AsyncCommand<GetDataCommand.Settings>
         var end = new DateTimeOffset(settings.End).ToUnixTimeSeconds();
 
         var stopwatch = Stopwatch.StartNew();
-        var response = await epochFlowApi.GetData(settings.SetId, GetDataRequest.Create(start, end, settings.Tag, QueryResolution.Hour, QueryAggregation.Average, new List<QueryFilter>()));
+        var response = await epochFlowApi.GetData(settings.SetId,
+            GetDataRequest.Create(start, end, settings.Tag, QueryResolution.Hour, QueryAggregation.Average,
+                new List<QueryFilter>()));
         stopwatch.Stop();
         _logger.LogInformation(
             "Completed with status code: status code: [{StatusCode}] in {Duration}ms",
@@ -58,7 +59,6 @@ public sealed class GetDataCommand : AsyncCommand<GetDataCommand.Settings>
 
     public sealed class Settings : EpochFlowBaseSettings
     {
-      
         [CommandOption("--id")]
         [Description("Set Id")]
         public string SetId { get; set; } = string.Empty;
@@ -78,10 +78,7 @@ public sealed class GetDataCommand : AsyncCommand<GetDataCommand.Settings>
         public override ValidationResult Validate()
         {
             var baseValidationResult = base.Validate();
-            if (!baseValidationResult.Successful)
-            {
-                return baseValidationResult;
-            }
+            if (!baseValidationResult.Successful) return baseValidationResult;
 
             if (string.IsNullOrWhiteSpace(SetId)) return ValidationResult.Error("Specify Set Id with '--id'");
 

@@ -46,17 +46,14 @@ public sealed class EnableApiKeyCommand : AsyncCommand<EnableApiKeyCommand.Setti
 
     public sealed class Settings : EpochFlowBaseSettings
     {
-       [CommandOption("--id")]
+        [CommandOption("--id")]
         [Description("Api key id")]
         public string Id { get; set; } = string.Empty;
 
         public override ValidationResult Validate()
         {
             var baseValidationResult = base.Validate();
-            if (!baseValidationResult.Successful)
-            {
-                return baseValidationResult;
-            }
+            if (!baseValidationResult.Successful) return baseValidationResult;
 
             if (string.IsNullOrWhiteSpace(Id)) return ValidationResult.Error("Specify Api key id with '--id'");
 

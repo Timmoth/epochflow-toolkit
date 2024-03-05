@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text.Json;
 using EpochFlow.ApiClient;
 using EpochFlow.ApiClient.Utilities;
@@ -55,10 +54,7 @@ public sealed class ListApiKeysCommand : AsyncCommand<ListApiKeysCommand.Setting
         public override ValidationResult Validate()
         {
             var baseValidationResult = base.Validate();
-            if (!baseValidationResult.Successful)
-            {
-                return baseValidationResult;
-            }
+            if (!baseValidationResult.Successful) return baseValidationResult;
 
             return ValidationResult.Success();
         }

@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Text.Json;
 using EpochFlow.ApiClient;
 using EpochFlow.ApiClient.Utilities;
-using EpochFlow.Toolkit.Commands.Accounts.ApiKeys;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Refit;
@@ -60,10 +59,7 @@ public sealed class GetSetCommand : AsyncCommand<GetSetCommand.Settings>
         public override ValidationResult Validate()
         {
             var baseValidationResult = base.Validate();
-            if (!baseValidationResult.Successful)
-            {
-                return baseValidationResult;
-            }
+            if (!baseValidationResult.Successful) return baseValidationResult;
 
             if (string.IsNullOrWhiteSpace(SetId)) return ValidationResult.Error("Specify Set Id with '--id'");
 
