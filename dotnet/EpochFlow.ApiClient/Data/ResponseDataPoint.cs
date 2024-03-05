@@ -1,11 +1,10 @@
 using System.Text.Json.Serialization;
 
-namespace EpochFlow.ApiClient.Data
-{
-    public class ResponseDataPoint
-    {
-        [JsonPropertyName("tag")] public string Tag { get; set; } = string.Empty;
+namespace EpochFlow.ApiClient.Data;
 
-        [JsonPropertyName("events")] public List<double[]> Events { get; set; } = new List<double[]>();
-    }
+public class ResponseDataPoint
+{
+    [JsonPropertyName("tag")] public string Tag { get; set; } = string.Empty;
+
+    [JsonPropertyName("events")] public List<double[]> Events { get; set; } = new();
 }

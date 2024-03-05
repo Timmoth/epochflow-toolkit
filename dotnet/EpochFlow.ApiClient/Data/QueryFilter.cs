@@ -4,14 +4,11 @@ namespace EpochFlow.ApiClient.Data;
 
 public record QueryFilter
 {
-    [JsonPropertyName("operator")]
-    public QueryFilterComparison Comparison { get; set; }
+    [JsonPropertyName("operator")] public QueryFilterComparison Comparison { get; set; }
 
-    [JsonPropertyName("prop")]
-    public QueryFilterProperty Property { get; set; }
+    [JsonPropertyName("prop")] public QueryFilterProperty Property { get; set; }
 
-    [JsonPropertyName("value")]
-    public double Value { get; set; }
+    [JsonPropertyName("value")] public double Value { get; set; }
 
     public string Encode()
     {

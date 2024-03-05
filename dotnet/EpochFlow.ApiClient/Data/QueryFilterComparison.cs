@@ -2,5 +2,9 @@
 
 public enum QueryFilterComparison
 {
-    gt, gte, lt, lte, e
+    gt,
+    gte,
+    lt,
+    lte,
+    e
 }

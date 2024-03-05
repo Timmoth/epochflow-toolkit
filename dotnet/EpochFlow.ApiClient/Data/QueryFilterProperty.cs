@@ -2,5 +2,11 @@
 
 public enum QueryFilterProperty
 {
-    Value, HourOfDay, DayOfWeek, DayOfMonth, DayOfYear, Year, Month
+    Value,
+    HourOfDay,
+    DayOfWeek,
+    DayOfMonth,
+    DayOfYear,
+    Year,
+    Month
 }

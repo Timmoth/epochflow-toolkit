@@ -1,8 +1,7 @@
-﻿namespace EpochFlow.ApiClient.Models
+﻿namespace EpochFlow.ApiClient.Models;
+
+public enum CollisionMode
 {
-    public enum CollisionMode
-    {
-        Combine = 0,
-        Overwrite = 1
-    }
+    Combine = 0,
+    Overwrite = 1
 }

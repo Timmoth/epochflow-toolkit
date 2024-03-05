@@ -13,6 +13,9 @@ public class ApiKey
     [JsonPropertyName("apikey_tail")] public string ApiKeyTail { get; set; } = string.Empty;
     [JsonPropertyName("key_name")] public string KeyName { get; set; } = string.Empty;
     [JsonPropertyName("is_admin")] public bool IsAdmin { get; set; } = false;
-    [JsonPropertyName("all_set_operations")] public AllowedOperations AllowedOperations { get; set; }
+
+    [JsonPropertyName("all_set_operations")]
+    public AllowedOperations AllowedOperations { get; set; }
+
     [JsonPropertyName("permissions")] public List<ApiKeyPermission> Permissions { get; set; } = new();
 }

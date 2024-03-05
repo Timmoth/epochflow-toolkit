@@ -1,11 +1,10 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace EpochFlow.ApiClient.Analytics
-{
-    public class DataPoint
-    {
-        [JsonPropertyName("ts")] public long Timestamp { get; set; }
+namespace EpochFlow.ApiClient.Analytics;
 
-        [JsonPropertyName("v")] public double Value { get; set; }
-    }
+public class DataPoint
+{
+    [JsonPropertyName("ts")] public long Timestamp { get; set; }
+
+    [JsonPropertyName("v")] public double Value { get; set; }
 }
