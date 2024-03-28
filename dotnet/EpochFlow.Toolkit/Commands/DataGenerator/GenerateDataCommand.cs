@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
-using System.Text.Json;
 using EpochFlow.ApiClient;
+using EpochFlow.ApiClient.Data;
 using EpochFlow.ApiClient.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -9,14 +9,14 @@ using Refit;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
-namespace EpochFlow.Toolkit.Commands.Sets.Tags;
+namespace EpochFlow.Toolkit.Commands.DataGenerator;
 
-public sealed class ListTagsCommand : AsyncCommand<ListTagsCommand.Settings>
+public sealed class GenerateDataCommand : AsyncCommand<GenerateDataCommand.Settings>
 {
-    private readonly ILogger<ListTagsCommand> _logger;
+    private readonly ILogger<GenerateDataCommand> _logger;
     private readonly IServiceProvider _serviceProvider;
 
-    public ListTagsCommand(ILogger<ListTagsCommand> logger, IServiceProvider serviceProvider)
+    public GenerateDataCommand(ILogger<GenerateDataCommand> logger, IServiceProvider serviceProvider)
     {
         _logger = logger;
         _serviceProvider = serviceProvider;
@@ -32,21 +32,25 @@ public sealed class ListTagsCommand : AsyncCommand<ListTagsCommand.Settings>
 
         var epochFlowApi = RestService.For<IEpochFlowV1>(httpClient, new RefitSettings());
 
-        var stopwatch = Stopwatch.StartNew();
-        var response = await epochFlowApi.ListTags(settings.SetId);
-        stopwatch.Stop();
-        _logger.LogInformation(
-            "Completed with status code: status code: [{StatusCode}] in {Duration}ms",
-            response.StatusCode,
-            stopwatch.ElapsedMilliseconds);
+        for (var i = 0; i < 30; i++)
+        {
+            var stopwatch = Stopwatch.StartNew();
+            var response = await epochFlowApi.PostDataPoint(settings.SetId,
+                new Measurement(DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
+                    Random.Shared.NextDouble(),
+                    new List<string> { settings.Tag }));
 
-        if (response.IsSuccessStatusCode && response.Content != null)
-            _logger.LogInformation(JsonSerializer.Serialize(response.Content, new JsonSerializerOptions
-            {
-                WriteIndented = true
-            }));
-        else
+            stopwatch.Stop();
+            _logger.LogInformation(
+                "Completed with status code: status code: [{StatusCode}] in {Duration}ms",
+                response.StatusCode,
+                stopwatch.ElapsedMilliseconds);
+
             _logger.LogIfError(response);
+
+            await Task.Delay(10000);
+        }
+
         return 0;
     }
 
@@ -56,12 +60,18 @@ public sealed class ListTagsCommand : AsyncCommand<ListTagsCommand.Settings>
         [Description("Set Id")]
         public string SetId { get; set; } = string.Empty;
 
+        [CommandOption("--tag")]
+        [Description("Tag name")]
+        public string Tag { get; set; } = string.Empty;
+
         public override ValidationResult Validate()
         {
             var baseValidationResult = base.Validate();
             if (!baseValidationResult.Successful) return baseValidationResult;
 
             if (string.IsNullOrWhiteSpace(SetId)) return ValidationResult.Error("Specify Set Id with '--id'");
+
+            if (string.IsNullOrWhiteSpace(Tag)) return ValidationResult.Error("Specify Tag name with '--tag'");
 
             return ValidationResult.Success();
         }

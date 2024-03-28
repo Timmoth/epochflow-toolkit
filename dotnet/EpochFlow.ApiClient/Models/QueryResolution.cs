@@ -8,5 +8,7 @@ public enum QueryResolution
     Default,
     Minute,
     Hour,
-    Day
+    Day,
+    Week,
+    Month
 }

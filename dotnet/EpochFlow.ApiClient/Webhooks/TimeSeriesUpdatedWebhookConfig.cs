@@ -16,9 +16,7 @@ public class TimeSeriesUpdatedWebhookConfig
 
     [JsonPropertyName("enabled")] public bool Enabled { get; set; } = false;
 
-    [JsonPropertyName("recent_requests")] public List<WebhookLogResponse> RecentRequests { get; set; } = new();
+    [JsonPropertyName("request_logs")] public List<WebhookLogResponse> RequestLogs { get; set; } = new();
 
     [JsonPropertyName("update_interval")] public int UpdateInterval { get; set; }
-
-    [JsonPropertyName("update_at")] public long UpdateAt { get; set; }
 }

@@ -54,20 +54,8 @@ public sealed class CreateSetCommand : AsyncCommand<CreateSetCommand.Settings>
         return 0;
     }
 
-    public sealed class Settings : CommandSettings
+    public sealed class Settings : EpochFlowBaseSettings
     {
-        [CommandOption("--url")]
-        [Description("API Url")]
-        public string ApiUrl { get; set; } = string.Empty;
-
-        [CommandOption("--account")]
-        [Description("Account Id")]
-        public string AccountId { get; set; } = string.Empty;
-
-        [CommandOption("--key")]
-        [Description("API key")]
-        public string ApiKey { get; set; } = string.Empty;
-
         [CommandOption("--name")]
         [Description("Set name")]
         public string SetName { get; set; } = string.Empty;
@@ -78,29 +66,8 @@ public sealed class CreateSetCommand : AsyncCommand<CreateSetCommand.Settings>
 
         public override ValidationResult Validate()
         {
-            if (string.IsNullOrWhiteSpace(ApiUrl))
-            {
-                ApiUrl = Environment.GetEnvironmentVariable("epochflow_url") ?? string.Empty;
-                if (string.IsNullOrWhiteSpace(ApiUrl))
-                    return ValidationResult.Error(
-                        "Specify Api url with '--url' or set 'epochflow_url' environment variable.");
-            }
-
-            if (string.IsNullOrWhiteSpace(AccountId))
-            {
-                AccountId = Environment.GetEnvironmentVariable("epochflow_account") ?? string.Empty;
-                if (string.IsNullOrWhiteSpace(AccountId))
-                    return ValidationResult.Error(
-                        "Specify Account Id with '--account' or set 'epochflow_account' environment variable.");
-            }
-
-            if (string.IsNullOrWhiteSpace(ApiKey))
-            {
-                ApiKey = Environment.GetEnvironmentVariable("epochflow_key") ?? string.Empty;
-                if (string.IsNullOrWhiteSpace(ApiKey))
-                    return ValidationResult.Error(
-                        "Specify Api Key with '--key' or set 'epochflow_key' environment variable.");
-            }
+            var baseValidationResult = base.Validate();
+            if (!baseValidationResult.Successful) return baseValidationResult;
 
             if (string.IsNullOrWhiteSpace(SetName)) return ValidationResult.Error("Specify Set name with '--name'");
 

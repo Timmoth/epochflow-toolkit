@@ -7,12 +7,6 @@ namespace EpochFlow.ApiClient.Analytics;
 
 public class GetAnalytics
 {
-    public static readonly string[] AnalyticsValues =
-    {
-        "actual_value", "actual_rolling", "predicted_value", "predicted_rolling", "delta_predicted",
-        "delta_predicted_rolling"
-    };
-
     [JsonPropertyName("start")]
     [AliasAs("start")]
     [Range(0, long.MaxValue)]
@@ -31,27 +25,20 @@ public class GetAnalytics
     [AliasAs("resolution")]
     public QueryResolution? Resolution { get; set; }
 
-    [JsonPropertyName("values")]
-    [AliasAs("values")]
-    public string[] Values { get; set; } = { };
-
-    public static GetAnalytics Create(long start, long end, string tag, string[] values,
-        QueryResolution? resolution = null)
+    public static GetAnalytics Create(long start, long end, string tag, QueryResolution? resolution = null)
     {
         return new GetAnalytics
         {
             Start = start,
             End = end,
             Tag = tag,
-            Resolution = resolution,
-            Values = values
+            Resolution = resolution
         };
     }
 
     protected bool Equals(GetAnalytics other)
     {
-        return Start == other.Start && End == other.End && Tag == other.Tag && Values.SequenceEqual(other.Values) &&
-               Resolution == other.Resolution;
+        return Start == other.Start && End == other.End && Tag == other.Tag && Resolution == other.Resolution;
     }
 
     public override bool Equals(object? obj)
@@ -67,6 +54,6 @@ public class GetAnalytics
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(Start, End, Tag, Values, Resolution);
+        return HashCode.Combine(Start, End, Tag, Resolution);
     }
 }

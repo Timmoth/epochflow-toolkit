@@ -1,5 +1,6 @@
 ﻿using EpochFlow.Toolkit.Commands.Accounts;
 using EpochFlow.Toolkit.Commands.Accounts.ApiKeys;
+using EpochFlow.Toolkit.Commands.DataGenerator;
 using EpochFlow.Toolkit.Commands.Sets;
 using EpochFlow.Toolkit.Commands.Sets.Data;
 using EpochFlow.Toolkit.Commands.Sets.Tags;
@@ -52,6 +53,7 @@ internal class Program
                 .WithDescription("Enable api key.");
             config.AddCommand<DisableApiKeyCommand>("disable-key")
                 .WithDescription("Disable api key.");
+
             #endregion
 
             #region Tags
@@ -68,6 +70,9 @@ internal class Program
 
             config.AddCommand<GetDataCommand>("get-data")
                 .WithDescription("Queries a set for data points.");
+
+            config.AddCommand<GenerateDataCommand>("generate-data")
+                .WithDescription("Posts a random measurement every 10 seconds for 5 minutes.");
 
             #endregion
         });
