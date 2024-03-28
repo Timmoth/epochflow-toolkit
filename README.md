@@ -11,6 +11,8 @@ This [docker image](https://hub.docker.com/r/aptacode/epochflow-emulator) provid
 
 ```
 docker run -p 8085:8080 aptacode/epochflow:latest
+Emulator web ui: https://localhost:8085
+Emulator Swagger docs: https://localhost:8085/swagger
 ```
 
 ## Nuget package
