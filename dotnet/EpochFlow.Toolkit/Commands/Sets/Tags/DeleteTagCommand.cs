@@ -32,7 +32,7 @@ public sealed class DeleteTagCommand : AsyncCommand<DeleteTagCommand.Settings>
         var epochFlowApi = RestService.For<IEpochFlowV1>(httpClient, new RefitSettings());
 
         var stopwatch = Stopwatch.StartNew();
-        var response = await epochFlowApi.DeleteTag(settings.SetId, settings.Tag);
+        var response = await epochFlowApi.DeleteMeasurmentTag(settings.SetId, settings.Tag);
         stopwatch.Stop();
         _logger.LogInformation(
             "Completed with status code: status code: [{StatusCode}] in {Duration}ms",

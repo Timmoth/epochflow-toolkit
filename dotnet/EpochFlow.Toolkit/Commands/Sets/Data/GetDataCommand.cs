@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Text.Json;
 using EpochFlow.ApiClient;
-using EpochFlow.ApiClient.Data;
+using EpochFlow.ApiClient.Measurements;
 using EpochFlow.ApiClient.Models;
 using EpochFlow.ApiClient.Utilities;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,7 +38,7 @@ public sealed class GetDataCommand : AsyncCommand<GetDataCommand.Settings>
         var end = new DateTimeOffset(settings.End).ToUnixTimeSeconds();
 
         var stopwatch = Stopwatch.StartNew();
-        var response = await epochFlowApi.GetData(settings.SetId,
+        var response = await epochFlowApi.GetMeasurements(settings.SetId,
             GetDataRequest.Create(start, end, settings.Tag, QueryResolution.Hour, QueryAggregation.Average,
                 new List<QueryFilter>()));
         stopwatch.Stop();

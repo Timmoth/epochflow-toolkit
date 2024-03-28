@@ -32,7 +32,7 @@ public sealed class DeleteSetCommand : AsyncCommand<DeleteSetCommand.Settings>
         var epochFlowApi = RestService.For<IEpochFlowV1>(httpClient, new RefitSettings());
 
         var stopwatch = Stopwatch.StartNew();
-        var response = await epochFlowApi.DeleteSet(settings.SetId);
+        var response = await epochFlowApi.DeleteMeasurementSet(settings.SetId);
         stopwatch.Stop();
         _logger.LogInformation(
             "Completed with status code: status code: [{StatusCode}] in {Duration}ms",

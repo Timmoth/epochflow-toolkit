@@ -75,6 +75,13 @@ internal class Program
                 .WithDescription("Posts a random measurement every 10 seconds for 5 minutes.");
 
             #endregion
+
+            #region Events
+
+            config.AddCommand<PostEventCommand>("post-event")
+                .WithDescription("Posts an event.");
+
+            #endregion
         });
 
         return app.Run(args);

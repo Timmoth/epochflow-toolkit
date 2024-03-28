@@ -32,7 +32,7 @@ public sealed class ListSetsCommand : AsyncCommand<ListSetsCommand.Settings>
         var epochFlowApi = RestService.For<IEpochFlowV1>(httpClient, new RefitSettings());
 
         var stopwatch = Stopwatch.StartNew();
-        var response = await epochFlowApi.ListSets();
+        var response = await epochFlowApi.ListMeasurementSets();
         stopwatch.Stop();
         _logger.LogInformation(
             "Completed with status code: status code: [{StatusCode}] in {Duration}ms",

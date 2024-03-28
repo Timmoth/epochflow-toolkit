@@ -2,8 +2,8 @@
 using System.Diagnostics;
 using System.Text.Json;
 using EpochFlow.ApiClient;
+using EpochFlow.ApiClient.Measurements.Sets;
 using EpochFlow.ApiClient.Models;
-using EpochFlow.ApiClient.Sets;
 using EpochFlow.ApiClient.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -34,9 +34,14 @@ public sealed class CreateSetCommand : AsyncCommand<CreateSetCommand.Settings>
 
         var epochFlowApi = RestService.For<IEpochFlowV1>(httpClient, new RefitSettings());
 
-        var collisionMode = settings.CollisionMode == "overwrite" ? CollisionMode.Overwrite : CollisionMode.Combine;
+        if (!Enum.TryParse<SampleMode>(settings.SampleMode, out var sampleMode))
+            return -1;
+
+        if (!Enum.TryParse<SamplePeriod>(settings.SamplePeriod, out var samplePeriod))
+            return -1;
+
         var stopwatch = Stopwatch.StartNew();
-        var response = await epochFlowApi.CreateSet(CreateSet.Create(settings.SetName, collisionMode));
+        var response = await epochFlowApi.CreateMeasurementSet(CreateMeasurementSet.Create(settings.SetName, sampleMode, samplePeriod));
         stopwatch.Stop();
         _logger.LogInformation(
             "Completed with status code: status code: [{StatusCode}] in {Duration}ms",
@@ -60,9 +65,13 @@ public sealed class CreateSetCommand : AsyncCommand<CreateSetCommand.Settings>
         [Description("Set name")]
         public string SetName { get; set; } = string.Empty;
 
-        [CommandOption("--collision-mode")]
-        [Description("Collision mode, either [combine, overwrite]")]
-        public string CollisionMode { get; set; } = string.Empty;
+        [CommandOption("--sample-mode")]
+        [Description("Sample mode, either [combine, overwrite]")]
+        public string SampleMode { get; set; } = string.Empty;
+
+        [CommandOption("--sample-period")]
+        [Description("Sample period, either [second, minute, hour, day]")]
+        public string SamplePeriod { get; set; } = string.Empty;
 
         public override ValidationResult Validate()
         {
@@ -75,11 +84,17 @@ public sealed class CreateSetCommand : AsyncCommand<CreateSetCommand.Settings>
 
             if (SetName.Length > 256) return ValidationResult.Error("Set name must be 256 characters or less.");
 
-            if (string.IsNullOrWhiteSpace(CollisionMode))
-                return ValidationResult.Error("Specify Collision mode with '--collision-mode'");
+            if (string.IsNullOrWhiteSpace(SampleMode))
+                return ValidationResult.Error("Specify sample mode with '--sample-mode'");
 
-            if (Enum.TryParse<CollisionMode>(CollisionMode, out var collision))
-                return ValidationResult.Error("Collision mode must be either [overwrite, combine]");
+            if (Enum.TryParse<SampleMode>(SampleMode, out var sampleMode))
+                return ValidationResult.Error("Sample mode must be either [overwrite, combine]");
+
+            if (string.IsNullOrWhiteSpace(SamplePeriod))
+                return ValidationResult.Error("Specify sample period with '--sample-period'");
+
+            if (Enum.TryParse<SamplePeriod>(SamplePeriod, out var samplePeriod))
+                return ValidationResult.Error("Sample mode must be either [second, minute, hour, day]");
 
             return ValidationResult.Success();
         }

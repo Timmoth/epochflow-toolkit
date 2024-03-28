@@ -33,7 +33,7 @@ public sealed class GetSetCommand : AsyncCommand<GetSetCommand.Settings>
         var epochFlowApi = RestService.For<IEpochFlowV1>(httpClient, new RefitSettings());
 
         var stopwatch = Stopwatch.StartNew();
-        var response = await epochFlowApi.GetSet(settings.SetId);
+        var response = await epochFlowApi.GetMeasurementSet(settings.SetId);
         stopwatch.Stop();
         _logger.LogInformation(
             "Completed with status code: status code: [{StatusCode}] in {Duration}ms",

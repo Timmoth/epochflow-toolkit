@@ -33,7 +33,7 @@ public sealed class ListTagsCommand : AsyncCommand<ListTagsCommand.Settings>
         var epochFlowApi = RestService.For<IEpochFlowV1>(httpClient, new RefitSettings());
 
         var stopwatch = Stopwatch.StartNew();
-        var response = await epochFlowApi.ListTags(settings.SetId);
+        var response = await epochFlowApi.ListMeasurementTags(settings.SetId);
         stopwatch.Stop();
         _logger.LogInformation(
             "Completed with status code: status code: [{StatusCode}] in {Duration}ms",
