@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
 using EpochFlow.ApiClient;
-using EpochFlow.ApiClient.Data;
+using EpochFlow.ApiClient.Measurements;
 using EpochFlow.ApiClient.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

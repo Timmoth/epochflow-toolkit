@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
 using EpochFlow.ApiClient;
-using EpochFlow.ApiClient.Data;
+using EpochFlow.ApiClient.Measurements;
 using EpochFlow.ApiClient.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -35,7 +35,7 @@ public sealed class GenerateDataCommand : AsyncCommand<GenerateDataCommand.Setti
         for (var i = 0; i < 30; i++)
         {
             var stopwatch = Stopwatch.StartNew();
-            var response = await epochFlowApi.PostDataPoint(settings.SetId,
+            var response = await epochFlowApi.PostMeasurement(settings.SetId,
                 new Measurement(DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
                     Random.Shared.NextDouble(),
                     new List<string> { settings.Tag }));

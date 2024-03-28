@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using EpochFlow.ApiClient.Utilities;
+using Microsoft.Extensions.DependencyInjection;
 using Polly;
 using Refit;
 
@@ -10,7 +11,10 @@ public static class EpochFlowStartupExtensions
         string accountId,
         string apiUrl)
     {
-        services.AddRefitClient<IEpochFlowV1>()
+        services.AddRefitClient<IEpochFlowV1>(new RefitSettings
+            {
+                ContentSerializer = new SystemTextJsonContentSerializer(SerializerExtensions.Options)
+            })
             .ConfigureHttpClient(c =>
             {
                 c.BaseAddress = new Uri(apiUrl.TrimEnd('/'));

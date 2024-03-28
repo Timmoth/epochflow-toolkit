@@ -6,10 +6,12 @@ public class CreateApiKey
 {
     [JsonPropertyName("expires_at")] public long? ExpiresAt { get; set; }
     [JsonPropertyName("key_name")] public string KeyName { get; set; } = string.Empty;
-    [JsonPropertyName("is_admin")] public bool IsAdmin { get; set; }
 
-    [JsonPropertyName("all_set_operations")]
-    public AllowedOperations AllSetOperations { get; set; }
+    [JsonPropertyName("project_role")] public ProjectRole ProjectRole { get; set; }
 
-    [JsonPropertyName("permissions")] public List<ApiKeyPermission> Permissions { get; set; } = new();
+    [JsonPropertyName("measurement_permissions")]
+    public List<MeasurementPermission> MeasurementPermissions { get; set; } = new();
+
+    [JsonPropertyName("event_permissions")]
+    public List<EventPermission> EventPermissions { get; set; } = new();
 }

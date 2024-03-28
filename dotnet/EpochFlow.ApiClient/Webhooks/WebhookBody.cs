@@ -8,5 +8,5 @@ public class WebhookBody
 
     [JsonPropertyName("timestamp")] public long Timestamp { get; set; }
 
-    [JsonPropertyName("updates")] public List<TimeSeriesUpdatedWebhook> Updates { get; set; } = new();
+    [JsonPropertyName("updates")] public List<MeasurementsUpdatedWebhook> Updates { get; set; } = new();
 }
