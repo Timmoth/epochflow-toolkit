@@ -3,65 +3,70 @@ using System.Text.Json.Serialization;
 using EpochFlow.ApiClient.Models;
 using Refit;
 
-namespace EpochFlow.ApiClient.Analytics
+namespace EpochFlow.ApiClient.Analytics;
+
+public class GetAnalytics
 {
-    public class GetAnalytics
+    public static readonly string[] AnalyticsValues =
     {
-        public static readonly string[] AnalyticsValues = new[] { "actual_value", "actual_rolling", "predicted_value", "predicted_rolling", "delta_predicted", "delta_predicted_rolling" };
+        "actual_value", "actual_rolling", "predicted_value", "predicted_rolling", "delta_predicted",
+        "delta_predicted_rolling"
+    };
 
-        [JsonPropertyName("start")]
-        [AliasAs("start")]
-        [Range(0, long.MaxValue)]
-        public long Start { get; set; }
+    [JsonPropertyName("start")]
+    [AliasAs("start")]
+    [Range(0, long.MaxValue)]
+    public long Start { get; set; }
 
-        [JsonPropertyName("end")]
-        [AliasAs("end")]
-        [Range(0, long.MaxValue)]
-        public long End { get; set; }
+    [JsonPropertyName("end")]
+    [AliasAs("end")]
+    [Range(0, long.MaxValue)]
+    public long End { get; set; }
 
-        [JsonPropertyName("tag")]
-        [AliasAs("tag")]
-        public string? Tag { get; set; }
+    [JsonPropertyName("tag")]
+    [AliasAs("tag")]
+    public string? Tag { get; set; }
 
-        [JsonPropertyName("resolution")]
-        [AliasAs("resolution")]
-        public QueryResolution? Resolution { get; set; }
+    [JsonPropertyName("resolution")]
+    [AliasAs("resolution")]
+    public QueryResolution? Resolution { get; set; }
 
-        [JsonPropertyName("values")]
-        [AliasAs("values")]
-        public string[] Values { get; set; } = new string[] { };
+    [JsonPropertyName("values")]
+    [AliasAs("values")]
+    public string[] Values { get; set; } = { };
 
-        public static GetAnalytics Create(long start, long end, string tag, string[] values, QueryResolution? resolution = null)
+    public static GetAnalytics Create(long start, long end, string tag, string[] values,
+        QueryResolution? resolution = null)
+    {
+        return new GetAnalytics
         {
-            return new GetAnalytics
-            {
-                Start = start,
-                End = end,
-                Tag = tag,
-                Resolution = resolution,
-                Values = values,
-            };
-        }
+            Start = start,
+            End = end,
+            Tag = tag,
+            Resolution = resolution,
+            Values = values
+        };
+    }
 
-        protected bool Equals(GetAnalytics other)
-        {
-            return Start == other.Start && End == other.End && Tag == other.Tag && Values.SequenceEqual(other.Values) && Resolution == other.Resolution;
-        }
+    protected bool Equals(GetAnalytics other)
+    {
+        return Start == other.Start && End == other.End && Tag == other.Tag && Values.SequenceEqual(other.Values) &&
+               Resolution == other.Resolution;
+    }
 
-        public override bool Equals(object? obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(null, obj)) return false;
 
-            if (ReferenceEquals(this, obj)) return true;
+        if (ReferenceEquals(this, obj)) return true;
 
-            if (obj.GetType() != GetType()) return false;
+        if (obj.GetType() != GetType()) return false;
 
-            return Equals((GetAnalytics)obj);
-        }
+        return Equals((GetAnalytics)obj);
+    }
 
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Start, End, Tag, Values, Resolution);
-        }
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Start, End, Tag, Values, Resolution);
     }
 }
