@@ -8,7 +8,6 @@ namespace EpochFlow.ApiClient;
 public static class EpochFlowStartupExtensions
 {
     public static IServiceCollection AddEpochFlowV1(this IServiceCollection services, string apiKey,
-        string accountId,
         string apiUrl)
     {
         services.AddRefitClient<IEpochFlowV1>(new RefitSettings
@@ -18,7 +17,6 @@ public static class EpochFlowStartupExtensions
             .ConfigureHttpClient(c =>
             {
                 c.BaseAddress = new Uri(apiUrl.TrimEnd('/'));
-                c.DefaultRequestHeaders.Add("X-Account-Id", accountId);
                 c.DefaultRequestHeaders.Add("X-API-Key", apiKey);
             })
             .AddPolicyHandler(Policy

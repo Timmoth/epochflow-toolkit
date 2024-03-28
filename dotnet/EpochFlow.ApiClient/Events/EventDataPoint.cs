@@ -19,5 +19,9 @@ public class EventDataPoint
 
     [JsonPropertyName("correlation_id")]
     [AliasAs("correlation_id")]
-    public long CorrelationId { get; set; }
+    public string CorrelationId { get; set; }
+
+    [JsonPropertyName("tags")]
+    [AliasAs("tags")]
+    public string[] Tags { get; set; } = Array.Empty<string>();
 }
