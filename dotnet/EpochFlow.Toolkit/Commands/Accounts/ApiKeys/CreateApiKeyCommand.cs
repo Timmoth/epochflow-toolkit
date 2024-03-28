@@ -99,10 +99,6 @@ public sealed class CreateApiKeyCommand : AsyncCommand<CreateApiKeyCommand.Setti
         [Description("Is admin")]
         public bool IsAdmin { get; set; } = false;
 
-        [CommandOption("--all_set_operations")]
-        [Description("Operations allowed on all sets")]
-        public AllowedOperations AllSetOperations { get; set; } = AllowedOperations.Undefined;
-
         [CommandOption("--permissions")]
         [Description("Key permissions")]
         public string Permissions { get; set; } = string.Empty;
