@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace EpochFlow.ApiClient.Measurements.Pipelines.TrainSeasonalityModel;
+namespace EpochFlow.ApiClient.Events.Pipelines.EventCount;
 
 public class CreateEventCountPipeline
 {

@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
+using EpochFlow.ApiClient.Events.Pipelines.EventState;
 using EpochFlow.ApiClient.Measurements.Pipelines.TrainSeasonalityModel;
 using EpochFlow.ApiClient.Models;
 using EpochFlow.ApiClient.Permissions;
@@ -20,7 +21,8 @@ public static class SerializerExtensions
             new EnumFlagsStringConverter<ProjectRole>(),
             new EnumFlagsStringConverter<SetOperations>(),
             new EnumFlagsStringConverter<SeasonalModelFilterType>(),
-            new EnumFlagsStringConverter<SeasonalModelAggregation>()
+            new EnumFlagsStringConverter<SeasonalModelAggregation>(),
+            new EnumFlagsStringConverter<EventStateGrouping>()
         }
     };
 
@@ -36,6 +38,7 @@ public static class SerializerExtensions
         options.Converters.Add(new EnumFlagsStringConverter<SetOperations>());
         options.Converters.Add(new EnumFlagsStringConverter<SeasonalModelFilterType>());
         options.Converters.Add(new EnumFlagsStringConverter<SeasonalModelAggregation>());
+        options.Converters.Add(new EnumFlagsStringConverter<EventStateGrouping>());
 
         return options;
     }

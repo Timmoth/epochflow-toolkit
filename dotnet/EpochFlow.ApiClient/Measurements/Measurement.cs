@@ -5,11 +5,12 @@ namespace EpochFlow.ApiClient.Measurements;
 
 public class Measurement
 {
-    public Measurement(long timestamp, double value, string source)
+    public Measurement(long timestamp, double value, string source, string[] tags)
     {
         Timestamp = timestamp;
         Value = value;
         Source = source;
+        Tags = tags;
     }
 
     [JsonPropertyName("timestamp")]
@@ -24,8 +25,12 @@ public class Measurement
     [AliasAs("source")]
     public string Source { get; set; }
 
-    public static Measurement Create(long timeStamp, double value, string source)
+    [JsonPropertyName("tags")]
+    [AliasAs("tags")]
+    public string[] Tags { get; set; }
+
+    public static Measurement Create(long timeStamp, double value, string source, string[] tags)
     {
-        return new Measurement(timeStamp, value, source);
+        return new Measurement(timeStamp, value, source, tags);
     }
 }

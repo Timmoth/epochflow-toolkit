@@ -2,9 +2,9 @@ using System.Text.Json.Serialization;
 
 namespace EpochFlow.ApiClient.Measurements;
 
-public class TagTotals
+public class MeasurementTotal
 {
-    [JsonPropertyName("source")] public string Source { get; set; } = string.Empty;
+    [JsonPropertyName("name")] public string Name { get; set; } = string.Empty;
     [JsonPropertyName("updated_at")] public long UpdatedAt { get; set; }
     [JsonPropertyName("sum")] public double Sum { get; set; }
     [JsonPropertyName("average")] public double Average { get; set; }

@@ -1,6 +1,9 @@
 ﻿using EpochFlow.ApiClient.Accounts;
 using EpochFlow.ApiClient.Analytics;
 using EpochFlow.ApiClient.Events;
+using EpochFlow.ApiClient.Events.Pipelines;
+using EpochFlow.ApiClient.Events.Pipelines.EventCount;
+using EpochFlow.ApiClient.Events.Pipelines.EventState;
 using EpochFlow.ApiClient.Events.Sets;
 using EpochFlow.ApiClient.Measurements;
 using EpochFlow.ApiClient.Measurements.Pipelines;
@@ -247,7 +250,7 @@ public interface IEpochFlowV1
     #region Sources
 
     [Get("/api/v1/projects/{projectId}/measurements/{id}/sources")]
-    public Task<ApiResponse<List<string>>> ListMeasurementSources(string projectId, string id);
+    public Task<ApiResponse<List<MeasurementSource>>> ListMeasurementSources(string projectId, string id);
 
     [Delete("/api/v1/projects/{projectId}/measurements/{id}/sources")]
     public Task<HttpResponseMessage> DeleteMeasurmentSources(string projectId, string id,
@@ -257,15 +260,16 @@ public interface IEpochFlowV1
 
     #region Data
 
-    [Get("/api/v1/projects/{projectId}/measurements/{setId}/data/export")]
-    Task<HttpResponseMessage> ExportMeasurements(string projectId, string setId,
+    [Post("/api/v1/projects/{projectId}/measurements/{setId}/data/archive")]
+    Task<HttpResponseMessage> RefreshMeasurementSourceArchive(string projectId, string setId, [Query][AliasAs("name")] string? name = null,
         CancellationToken cancellationToken = default);
 
-    [Multipart]
-    [Post("/api/v1/projects/{projectId}/measurements/{setId}/data/import")]
-    Task<HttpResponseMessage> ImportMeasurements(string projectId, string setId,
-        [AliasAs("zipFile")] StreamPart zipFileContent,
+    [Get("/api/v1/projects/{projectId}/measurements/{setId}/data/archive")]
+    Task<ApiResponse<List<ArchiveUrlResponse>>> GetMeasurementSourceArchive(string projectId, string setId, [Query][AliasAs("name")] string? name = null,
         CancellationToken cancellationToken = default);
+
+    [Get("/api/v1/projects/{projectId}/measurements/{setId}/data/import/url")]
+    Task<ApiResponse<string>> GetMeasurementUploadUrl(string projectId, string setId, [Query][AliasAs("name")] string name, CancellationToken cancellationToken = default);
 
     [Get("/api/v1/projects/{projectId}/measurements/{id}/data")]
     public Task<ApiResponse<List<double[]>>> GetMeasurements(string projectId, string id,
@@ -283,18 +287,15 @@ public interface IEpochFlowV1
         [Query] [AliasAs("resolution")] QueryResolution resolution
     );
 
-    [Get("/api/v1/projects/{projectId}/measurements/{id}/data/analytics/anomalies")]
-    public Task<ApiResponse<List<double[]>>> GetMeasurementAnomalies(string projectId, string id,
-        [Query] GetDataRequest request
-    );
+    [Get("/api/v1/projects/{projectId}/measurements/{id}/data/sources/total")]
+    public Task<ApiResponse<List<MeasurementTotal>>> GetMeasurementSourceTotals(string projectId, string id,
+        [Query(CollectionFormat.Multi)]
+        [AliasAs("sources")]List<string>? sources = null);
 
-    [Get("/api/v1/projects/{projectId}/measurements/{id}/data/analytics/latest")]
-    public Task<ApiResponse<LatestDataPoints>> GetLatestMeasurements(string projectId, string id,
-        [Query] GetLatestRequest request);
-
-    [Get("/api/v1/projects/{projectId}/measurements/{id}/data/analytics/total")]
-    public Task<ApiResponse<List<TagTotals>>> GetMeasurementTotals(string projectId, string id,
-        [Query] GetTotalRequest request);
+    [Get("/api/v1/projects/{projectId}/measurements/{id}/data/tags/total")]
+    public Task<ApiResponse<List<MeasurementTotal>>> GetMeasurementTagTotals(string projectId, string id,
+        [Query(CollectionFormat.Multi)]
+        [AliasAs("tags")]List<string>? tags = null);
 
     [Post("/api/v1/projects/{projectId}/measurements/{id}/data")]
     public Task<HttpResponseMessage> PostMeasurement(string projectId, string id, [Body] Measurement request);
@@ -336,6 +337,33 @@ public interface IEpochFlowV1
     [Patch("/api/v1/projects/{projectId}/events/{setId}/pipelines/event_count/{id}")]
     public Task<ApiResponse<EventCountPipeline>> UpdateEventCountPipeline(string projectId,
         string setId, string id, [Body] UpdateEventCountPipeline request);
+
+    #endregion
+
+    #region Event State
+
+    [Get("/api/v1/projects/{projectId}/events/{setId}/pipelines/event_state/{id}")]
+    public Task<ApiResponse<EventStatePipeline>> GetEventStatePipeline(string projectId, string setId,
+        string id);
+
+    [Get("/api/v1/projects/{projectId}/events/{setId}/pipelines/event_state/{id}/states")]
+    public Task<ApiResponse<List<EventState>>> ListEventStates(string projectId, string setId,
+        string id, [Query(CollectionFormat.Multi)][AliasAs("names")] List<string>? names = null, [Query(CollectionFormat.Multi)][AliasAs("properties")] List<string>? properties = null);
+
+    [Get("/api/v1/projects/{projectId}/events/{setId}/pipelines/event_state")]
+    public Task<ApiResponse<List<EventStatePipeline>>> ListEventStatePipelines(string projectId,
+        string setId);
+
+    [Delete("/api/v1/projects/{projectId}/events/{setId}/pipelines/event_state/{id}")]
+    public Task<HttpResponseMessage> DeleteEventStatePipeline(string projectId, string setId, string id);
+
+    [Post("/api/v1/projects/{projectId}/events/{setId}/pipelines/event_state")]
+    public Task<ApiResponse<EventStatePipeline>> CreateEventStatePipeline(string projectId,
+        string setId, [Body] CreateEventStatePipeline request);
+
+    [Patch("/api/v1/projects/{projectId}/events/{setId}/pipelines/event_state/{id}")]
+    public Task<ApiResponse<EventStatePipeline>> UpdateEventStatePipeline(string projectId,
+        string setId, string id, [Body] UpdateEventStatePipeline request);
 
     #endregion
 

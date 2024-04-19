@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace EpochFlow.ApiClient.Measurements.Pipelines;
+namespace EpochFlow.ApiClient.Events.Pipelines;
 
 public class EventPipeline
 {

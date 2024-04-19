@@ -24,4 +24,8 @@ public class EventDataPoint
     [JsonPropertyName("tags")]
     [AliasAs("tags")]
     public string[] Tags { get; set; } = Array.Empty<string>();
+
+    [JsonPropertyName("state")]
+    [AliasAs("state")]
+    public Dictionary<string, string> State { get; set; } = new();
 }

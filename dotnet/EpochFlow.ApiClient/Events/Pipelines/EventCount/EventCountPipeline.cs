@@ -1,6 +1,7 @@
 ﻿using System.Text.Json.Serialization;
+using EpochFlow.ApiClient.Measurements.Pipelines;
 
-namespace EpochFlow.ApiClient.Measurements.Pipelines.TrainSeasonalityModel;
+namespace EpochFlow.ApiClient.Events.Pipelines.EventCount;
 
 public enum EventCountFilter
 {
