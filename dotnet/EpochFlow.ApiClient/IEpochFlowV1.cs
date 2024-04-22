@@ -260,6 +260,16 @@ public interface IEpochFlowV1
 
     #region Data
 
+    [Get("/api/v1/projects/{projectId}/measurements/{setId}/data/import/zip/url")]
+    Task<ApiResponse<string>> GetMeasurementZipUploadUrl(string projectId, string setId, CancellationToken cancellationToken = default);
+
+    [Post("/api/v1/projects/{projectId}/measurements/{setId}/data/archive/zip")]
+    Task<HttpResponseMessage> ZipMeasurementSourceArchive(string projectId, string setId,
+        CancellationToken cancellationToken = default);
+
+    [Get("/api/v1/projects/{projectId}/measurements/{setId}/data/archive/zip")]
+    Task<ApiResponse<string>> GetMeasurementSourceZipArchive(string projectId, string setId, CancellationToken cancellationToken = default);
+
     [Post("/api/v1/projects/{projectId}/measurements/{setId}/data/archive")]
     Task<HttpResponseMessage> RefreshMeasurementSourceArchive(string projectId, string setId, [Query][AliasAs("name")] string? name = null,
         CancellationToken cancellationToken = default);
@@ -391,7 +401,7 @@ public interface IEpochFlowV1
     #region Sources
 
     [Get("/api/v1/projects/{projectId}/events/{id}/sources")]
-    public Task<ApiResponse<List<string>>> ListEventSources(string projectId, string id);
+    public Task<ApiResponse<List<EventSource>>> ListEventSources(string projectId, string id);
 
     [Delete("/api/v1/projects/{projectId}/events/{id}/sources")]
     public Task<HttpResponseMessage> DeleteEventSource(string projectId, string id,
@@ -417,15 +427,26 @@ public interface IEpochFlowV1
 
     #region Data
 
-    [Get("/api/v1/projects/{projectId}/events/{setId}/data/export")]
-    Task<HttpResponseMessage> ExportEvents(string projectId, string setId,
+    [Get("/api/v1/projects/{projectId}/events/{setId}/data/import/zip/url")]
+    Task<ApiResponse<string>> GetEventZipUploadUrl(string projectId, string setId, CancellationToken cancellationToken = default);
+
+    [Post("/api/v1/projects/{projectId}/events/{setId}/data/archive/zip")]
+    Task<HttpResponseMessage> ZipEventSourceArchive(string projectId, string setId,
         CancellationToken cancellationToken = default);
 
-    [Multipart]
-    [Post("/api/v1/projects/{projectId}/events/{setId}/data/import")]
-    Task<HttpResponseMessage> ImportEvents(string projectId, string setId,
-        [AliasAs("zipFile")] StreamPart zipFileContent,
+    [Get("/api/v1/projects/{projectId}/events/{setId}/data/archive/zip")]
+    Task<ApiResponse<string>> GetEventSourceZipArchive(string projectId, string setId, CancellationToken cancellationToken = default);
+
+    [Post("/api/v1/projects/{projectId}/events/{setId}/data/archive")]
+    Task<HttpResponseMessage> RefreshEventSourceArchive(string projectId, string setId, [Query][AliasAs("name")] string? name = null,
         CancellationToken cancellationToken = default);
+
+    [Get("/api/v1/projects/{projectId}/events/{setId}/data/archive")]
+    Task<ApiResponse<List<ArchiveUrlResponse>>> GetEventSourceArchive(string projectId, string setId, [Query][AliasAs("name")] string? name = null,
+        CancellationToken cancellationToken = default);
+
+    [Get("/api/v1/projects/{projectId}/events/{setId}/data/import/url")]
+    Task<ApiResponse<string>> GetEventUploadUrl(string projectId, string setId, [Query][AliasAs("name")] string name, CancellationToken cancellationToken = default);
 
     [Post("/api/v1/projects/{projectId}/events/{id}/data")]
     public Task<HttpResponseMessage> PostEvent(string projectId, string id, [Body] EventDataPoint request);
@@ -450,6 +471,27 @@ public interface IEpochFlowV1
         [Query] [AliasAs("end")] long endParam,
         [Query] [AliasAs("source")] string? source,
         [Query] [AliasAs("resolution")] QueryResolution resolution
+    );
+
+    [Get("/api/v1/projects/{projectId}/events/{id}/data/numeric")]
+    public Task<ApiResponse<List<double[]>>> GetEventNumericProperty(string projectId, string id,
+        [Query][AliasAs("event")] string? eventName,
+        [Query][AliasAs("start")] long startParam,
+        [Query][AliasAs("end")] long endParam,
+        [Query][AliasAs("source")] string? source,
+        [Query][AliasAs("tag")] string? tag,
+        [Query][AliasAs("property")] string property,
+        [Query][AliasAs("resolution")] QueryResolution resolution,
+        [Query][AliasAs("aggregation")] QueryAggregation aggregation
+    );
+
+    [Get("/api/v1/projects/{projectId}/events/{id}/data")]
+    public Task<ApiResponse<List<EventDataPoint>>> GetEventData(string projectId, string id,
+        [Query][AliasAs("event")] string? eventName,
+        [Query][AliasAs("start")] long startParam,
+        [Query][AliasAs("end")] long endParam,
+        [Query][AliasAs("source")] string? source,
+        [Query][AliasAs("tag")] string? tag
     );
 
     #endregion

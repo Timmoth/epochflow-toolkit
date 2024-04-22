@@ -21,11 +21,19 @@ public class EventDataPoint
     [AliasAs("correlation_id")]
     public string CorrelationId { get; set; }
 
+    [JsonPropertyName("insert_id")]
+    [AliasAs("insert_id")]
+    public string? InsertId { get; set; }
+
     [JsonPropertyName("tags")]
     [AliasAs("tags")]
     public string[] Tags { get; set; } = Array.Empty<string>();
 
-    [JsonPropertyName("state")]
-    [AliasAs("state")]
-    public Dictionary<string, string> State { get; set; } = new();
+    [JsonPropertyName("string_state")]
+    [AliasAs("string_state")]
+    public Dictionary<string, string> StringState { get; set; } = new();
+
+    [JsonPropertyName("numeric_state")]
+    [AliasAs("numeric_state")]
+    public Dictionary<string, double> NumericState { get; set; } = new();
 }
