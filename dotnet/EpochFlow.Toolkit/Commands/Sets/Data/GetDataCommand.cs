@@ -29,7 +29,6 @@ public sealed class GetDataCommand : AsyncCommand<GetDataCommand.Settings>
         using var scope = _serviceProvider.CreateScope();
         var httpClient = scope.ServiceProvider.GetRequiredService<HttpClient>();
         httpClient.BaseAddress = new Uri(settings.ApiUrl);
-        httpClient.DefaultRequestHeaders.Add("X-Account-Id", settings.AccountId);
         httpClient.DefaultRequestHeaders.Add("X-API-Key", settings.ApiKey);
 
         var epochFlowApi = RestService.For<IEpochFlowV1>(httpClient, new RefitSettings());
@@ -38,8 +37,8 @@ public sealed class GetDataCommand : AsyncCommand<GetDataCommand.Settings>
         var end = new DateTimeOffset(settings.End).ToUnixTimeSeconds();
 
         var stopwatch = Stopwatch.StartNew();
-        var response = await epochFlowApi.GetMeasurements(settings.SetId,
-            GetDataRequest.Create(start, end, settings.Tag, QueryResolution.Hour, QueryAggregation.Average,
+        var response = await epochFlowApi.GetMeasurements(settings.ProjectId, settings.SetId,
+            GetDataRequest.Create(start, end, settings.Source, settings.Tag, QueryResolution.Hour, QueryAggregation.Average,
                 new List<QueryFilter>()));
         stopwatch.Stop();
         _logger.LogInformation(
@@ -57,7 +56,7 @@ public sealed class GetDataCommand : AsyncCommand<GetDataCommand.Settings>
         return 0;
     }
 
-    public sealed class Settings : EpochFlowBaseSettings
+    public sealed class Settings : ProjectBaseSettings
     {
         [CommandOption("--id")]
         [Description("Set Id")]
@@ -70,6 +69,10 @@ public sealed class GetDataCommand : AsyncCommand<GetDataCommand.Settings>
         [CommandOption("--end")]
         [Description("End datetime")]
         public DateTime End { get; set; } = DateTime.Now;
+
+        [CommandOption("--source")]
+        [Description("Source")]
+        public string Source { get; set; } = string.Empty;
 
         [CommandOption("--tag")]
         [Description("Tag")]
