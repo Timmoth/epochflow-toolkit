@@ -79,7 +79,7 @@ public sealed class CreateSetCommand : AsyncCommand<CreateSetCommand.Settings>
             if (string.IsNullOrWhiteSpace(SamplePeriod))
                 return ValidationResult.Error("Specify sample period with '--sample-period'");
 
-            if (Enum.TryParse<SamplePeriod>(SamplePeriod, out var samplePeriod))
+            if (!Enum.TryParse<SamplePeriod>(SamplePeriod, out var samplePeriod))
                 return ValidationResult.Error("Sample mode must be either [second, minute, hour, day]");
 
             return ValidationResult.Success();

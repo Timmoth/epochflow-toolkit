@@ -6,7 +6,7 @@ namespace EpochFlow.Toolkit.Commands.Sets;
 
 public class ProjectBaseSettings : EpochFlowBaseSettings
 {
-    [CommandOption("--project")]
+    [CommandOption("--project-id")]
     [Description("Project Id")]
     public string ProjectId { get; set; } = string.Empty;
     public override ValidationResult Validate()
@@ -17,7 +17,7 @@ public class ProjectBaseSettings : EpochFlowBaseSettings
         if (string.IsNullOrWhiteSpace(ProjectId))
         {
             return ValidationResult.Error(
-                "Specify Project Id with '--project'.");
+                "Specify Project Id with '--project-id'.");
         }
 
         return ValidationResult.Success();

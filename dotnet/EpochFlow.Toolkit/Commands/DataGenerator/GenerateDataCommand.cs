@@ -60,7 +60,7 @@ public sealed class GenerateDataCommand : AsyncCommand<GenerateDataCommand.Setti
         [Description("Set Id")]
         public string SetId { get; set; } = string.Empty;
 
-        [CommandOption("--tag")]
+        [CommandOption("--source")]
         [Description("Source name")]
         public string Source { get; set; } = string.Empty;
 
