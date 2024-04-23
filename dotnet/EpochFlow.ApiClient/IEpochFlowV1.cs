@@ -474,13 +474,13 @@ public interface IEpochFlowV1
     );
 
     [Get("/api/v1/projects/{projectId}/events/{id}/data/numeric")]
-    public Task<ApiResponse<List<double[]>>> GetEventNumericProperty(string projectId, string id,
+    public Task<ApiResponse<List<double?[]>>> GetEventNumericProperties(string projectId, string id,
         [Query][AliasAs("event")] string? eventName,
         [Query][AliasAs("start")] long startParam,
         [Query][AliasAs("end")] long endParam,
         [Query][AliasAs("source")] string? source,
         [Query][AliasAs("tag")] string? tag,
-        [Query][AliasAs("property")] string property,
+        [Query(CollectionFormat.Multi)][AliasAs("properties")] List<string> properties,
         [Query][AliasAs("resolution")] QueryResolution resolution,
         [Query][AliasAs("aggregation")] QueryAggregation aggregation
     );
