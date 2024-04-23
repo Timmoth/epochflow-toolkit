@@ -289,12 +289,34 @@ public interface IEpochFlowV1
     public Task<ApiResponse<List<double[]>>> GetPredictedMeasurements(string projectId, string id,
         [Query] GetDataRequest request);
 
-    [Get("/api/v1/projects/{projectId}/measurements/{id}/data/analytics/downtime")]
-    public Task<ApiResponse<long[]>> GetMeasurementDowntime(string projectId, string id,
-        [Query] [AliasAs("start")] long startParam,
-        [Query] [AliasAs("end")] long endParam,
-        [Query] [AliasAs("source")] string source,
-        [Query] [AliasAs("resolution")] QueryResolution resolution
+    [Get("/api/v1/projects/{projectId}/measurements/{id}/data/aggregate/hour_of_day")]
+    public Task<ApiResponse<List<double[]>>> GetHourOfDayAggregate(string projectId, string id, 
+        [Query][AliasAs("start")] long start,
+        [Query][AliasAs("end")] long end,
+        [Query][AliasAs("source")] string? source,
+        [Query][AliasAs("tag")] string? tag,
+        [Query][AliasAs("aggregation")] QueryAggregation aggregation,
+        CancellationToken cancellationToken = default
+        );
+
+    [Get("/api/v1/projects/{projectId}/measurements/{id}/data/aggregate/hour_of_week")]
+    public Task<ApiResponse<List<double[]>>> GetHourOfWeekAggregate(string projectId, string id,
+        [Query][AliasAs("start")] long start,
+        [Query][AliasAs("end")] long end,
+        [Query][AliasAs("source")] string? source,
+        [Query][AliasAs("tag")] string? tag,
+        [Query][AliasAs("aggregation")] QueryAggregation aggregation,
+        CancellationToken cancellationToken = default
+    );
+
+    [Get("/api/v1/projects/{projectId}/measurements/{id}/data/aggregate/day_of_week")]
+    public Task<ApiResponse<List<double[]>>> GetDayOfWeekAggregate(string projectId, string id,
+        [Query][AliasAs("start")] long start,
+        [Query][AliasAs("end")] long end,
+        [Query][AliasAs("source")] string? source,
+        [Query][AliasAs("tag")] string? tag,
+        [Query][AliasAs("aggregation")] QueryAggregation aggregation,
+        CancellationToken cancellationToken = default
     );
 
     [Get("/api/v1/projects/{projectId}/measurements/{id}/data/sources/total")]
