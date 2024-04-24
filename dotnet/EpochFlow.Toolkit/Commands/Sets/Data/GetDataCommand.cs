@@ -38,8 +38,7 @@ public sealed class GetDataCommand : AsyncCommand<GetDataCommand.Settings>
 
         var stopwatch = Stopwatch.StartNew();
         var response = await epochFlowApi.GetMeasurements(settings.ProjectId, settings.SetId,
-            GetDataRequest.Create(start, end, settings.Source, settings.Tag, QueryResolution.Hour, QueryAggregation.Average,
-                new List<QueryFilter>()));
+            start, end, settings.Source, settings.Tag, QueryResolution.Hour, QueryAggregation.Average, new List<string>());
         stopwatch.Stop();
         _logger.LogInformation(
             "Completed with status code: status code: [{StatusCode}] in {Duration}ms",
@@ -47,7 +46,7 @@ public sealed class GetDataCommand : AsyncCommand<GetDataCommand.Settings>
             stopwatch.ElapsedMilliseconds);
 
         if (response.IsSuccessStatusCode && response.Content != null)
-            _logger.LogInformation(JsonSerializer.Serialize(response.Content, new JsonSerializerOptions
+            _logger.LogInformation(JsonSerializer.Serialize(response.Content.Data, new JsonSerializerOptions
             {
                 WriteIndented = true
             }));
