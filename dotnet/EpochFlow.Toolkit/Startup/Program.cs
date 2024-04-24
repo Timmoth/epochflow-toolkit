@@ -1,6 +1,4 @@
-﻿using EpochFlow.Toolkit.Commands.Accounts;
-using EpochFlow.Toolkit.Commands.Accounts.ApiKeys;
-using EpochFlow.Toolkit.Commands.DataGenerator;
+﻿using EpochFlow.Toolkit.Commands.DataGenerator;
 using EpochFlow.Toolkit.Commands.Sets;
 using EpochFlow.Toolkit.Commands.Sets.Data;
 using EpochFlow.Toolkit.Commands.Sets.Tags;
@@ -19,13 +17,7 @@ internal class Program
         var app = new CommandApp(new TypeRegistrar(serviceCollection));
         app.Configure(config =>
         {
-            #region Account
-
-            config.AddCommand<GetAccountCommand>("get-account")
-                .WithDescription("Gets your account.");
-
-            #endregion
-
+   
             #region Sets
 
             config.AddCommand<CreateSetCommand>("create-set")
@@ -36,23 +28,6 @@ internal class Program
                 .WithDescription("Deletes a set.");
             config.AddCommand<ListSetsCommand>("list-sets")
                 .WithDescription("List sets.");
-
-            #endregion
-
-            #region ApiKeys
-
-            config.AddCommand<CreateApiKeyCommand>("create-key")
-                .WithDescription("Creates a new api key.");
-            config.AddCommand<GetApiKeyCommand>("get-key")
-                .WithDescription("Gets a api key.");
-            config.AddCommand<DeleteApiKeyCommand>("delete-key")
-                .WithDescription("Deletes a api key.");
-            config.AddCommand<ListApiKeysCommand>("list-keys")
-                .WithDescription("List api keys.");
-            config.AddCommand<EnableApiKeyCommand>("enable-key")
-                .WithDescription("Enable api key.");
-            config.AddCommand<DisableApiKeyCommand>("disable-key")
-                .WithDescription("Disable api key.");
 
             #endregion
 

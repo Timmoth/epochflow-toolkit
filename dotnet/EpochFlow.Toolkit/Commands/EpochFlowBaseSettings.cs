@@ -10,10 +10,6 @@ public abstract class EpochFlowBaseSettings : CommandSettings
     [Description("API Url")]
     public string ApiUrl { get; set; } = string.Empty;
 
-    [CommandOption("--account")]
-    [Description("Account Id")]
-    public string AccountId { get; set; } = string.Empty;
-
     [CommandOption("--key")]
     [Description("API key")]
     public string ApiKey { get; set; } = string.Empty;
@@ -35,14 +31,6 @@ public abstract class EpochFlowBaseSettings : CommandSettings
             }
 
             ApiUrl = "http://localhost:8085";
-        }
-
-        if (string.IsNullOrWhiteSpace(AccountId) && !Emulator)
-        {
-            AccountId = Environment.GetEnvironmentVariable("epochflow_account") ?? string.Empty;
-            if (string.IsNullOrWhiteSpace(AccountId))
-                return ValidationResult.Error(
-                    "Specify Account Id with '--account' or set 'epochflow_account' environment variable.");
         }
 
         if (string.IsNullOrWhiteSpace(ApiKey) && !Emulator)

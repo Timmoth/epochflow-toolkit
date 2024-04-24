@@ -26,13 +26,12 @@ public sealed class DeleteTagCommand : AsyncCommand<DeleteTagCommand.Settings>
         using var scope = _serviceProvider.CreateScope();
         var httpClient = scope.ServiceProvider.GetRequiredService<HttpClient>();
         httpClient.BaseAddress = new Uri(settings.ApiUrl);
-        httpClient.DefaultRequestHeaders.Add("X-Account-Id", settings.AccountId);
         httpClient.DefaultRequestHeaders.Add("X-API-Key", settings.ApiKey);
 
         var epochFlowApi = RestService.For<IEpochFlowV1>(httpClient, new RefitSettings());
 
         var stopwatch = Stopwatch.StartNew();
-        var response = await epochFlowApi.DeleteMeasurmentTag(settings.SetId, settings.Tag);
+        var response = await epochFlowApi.DeleteMeasurmentSources(settings.ProjectId, settings.SetId, settings.Tag);
         stopwatch.Stop();
         _logger.LogInformation(
             "Completed with status code: status code: [{StatusCode}] in {Duration}ms",
@@ -44,7 +43,7 @@ public sealed class DeleteTagCommand : AsyncCommand<DeleteTagCommand.Settings>
         return 0;
     }
 
-    public sealed class Settings : EpochFlowBaseSettings
+    public sealed class Settings : ProjectBaseSettings
     {
         [CommandOption("--id")]
         [Description("Set Id")]

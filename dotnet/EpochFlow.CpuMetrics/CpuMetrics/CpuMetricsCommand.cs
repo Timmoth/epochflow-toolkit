@@ -40,14 +40,13 @@ public sealed class CpuMetricsCommand : AsyncCommand<CpuMetricsCommand.Settings>
             using var scope = _serviceProvider.CreateScope();
             var httpClient = scope.ServiceProvider.GetRequiredService<HttpClient>();
             httpClient.BaseAddress = new Uri(settings.ApiUrl);
-            httpClient.DefaultRequestHeaders.Add("X-Account-Id", settings.AccountId);
             httpClient.DefaultRequestHeaders.Add("X-API-Key", settings.ApiKey);
 
             var epochFlowApi = RestService.For<IEpochFlowV1>(httpClient, new RefitSettings());
 
             var request = Measurement.Create(_timeProvider.GetUtcNow().ToUnixTimeSeconds(), cpuUsage,
-                new List<string> { "laptop" });
-            var response = await epochFlowApi.PostDataPoint(settings.SetId, request
+                "generator", Array.Empty<string>());
+            var response = await epochFlowApi.PostMeasurement(settings.ProjectId, settings.SetId, request
             );
 
             _logger.LogIfError(response);
@@ -63,13 +62,13 @@ public sealed class CpuMetricsCommand : AsyncCommand<CpuMetricsCommand.Settings>
         [DefaultValue("https://localhost:7125")]
         public string ApiUrl { get; set; } = string.Empty;
 
-        [CommandOption("--account")]
-        [Description("Epochflow account Id")]
-        public string AccountId { get; set; } = string.Empty;
-
         [CommandOption("--key")]
         [Description("Epochflow API key")]
         public string ApiKey { get; set; } = string.Empty;
+
+        [CommandOption("--project")]
+        [Description("Epochflow Project Id")]
+        public string ProjectId { get; set; } = string.Empty;
 
         [CommandOption("--set")]
         [Description("Epochflow Set Id")]

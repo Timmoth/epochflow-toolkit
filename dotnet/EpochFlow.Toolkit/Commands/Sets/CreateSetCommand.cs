@@ -29,19 +29,15 @@ public sealed class CreateSetCommand : AsyncCommand<CreateSetCommand.Settings>
         using var scope = _serviceProvider.CreateScope();
         var httpClient = scope.ServiceProvider.GetRequiredService<HttpClient>();
         httpClient.BaseAddress = new Uri(settings.ApiUrl);
-        httpClient.DefaultRequestHeaders.Add("X-Account-Id", settings.AccountId);
         httpClient.DefaultRequestHeaders.Add("X-API-Key", settings.ApiKey);
 
         var epochFlowApi = RestService.For<IEpochFlowV1>(httpClient, new RefitSettings());
-
-        if (!Enum.TryParse<SampleMode>(settings.SampleMode, out var sampleMode))
-            return -1;
 
         if (!Enum.TryParse<SamplePeriod>(settings.SamplePeriod, out var samplePeriod))
             return -1;
 
         var stopwatch = Stopwatch.StartNew();
-        var response = await epochFlowApi.CreateMeasurementSet(CreateMeasurementSet.Create(settings.SetName, sampleMode, samplePeriod));
+        var response = await epochFlowApi.CreateMeasurementSet(settings.ProjectId,CreateMeasurementSet.Create(settings.SetName, samplePeriod));
         stopwatch.Stop();
         _logger.LogInformation(
             "Completed with status code: status code: [{StatusCode}] in {Duration}ms",
@@ -59,15 +55,11 @@ public sealed class CreateSetCommand : AsyncCommand<CreateSetCommand.Settings>
         return 0;
     }
 
-    public sealed class Settings : EpochFlowBaseSettings
+    public sealed class Settings : ProjectBaseSettings
     {
         [CommandOption("--name")]
         [Description("Set name")]
         public string SetName { get; set; } = string.Empty;
-
-        [CommandOption("--sample-mode")]
-        [Description("Sample mode, either [combine, overwrite]")]
-        public string SampleMode { get; set; } = string.Empty;
 
         [CommandOption("--sample-period")]
         [Description("Sample period, either [second, minute, hour, day]")]
@@ -84,16 +76,10 @@ public sealed class CreateSetCommand : AsyncCommand<CreateSetCommand.Settings>
 
             if (SetName.Length > 256) return ValidationResult.Error("Set name must be 256 characters or less.");
 
-            if (string.IsNullOrWhiteSpace(SampleMode))
-                return ValidationResult.Error("Specify sample mode with '--sample-mode'");
-
-            if (Enum.TryParse<SampleMode>(SampleMode, out var sampleMode))
-                return ValidationResult.Error("Sample mode must be either [overwrite, combine]");
-
             if (string.IsNullOrWhiteSpace(SamplePeriod))
                 return ValidationResult.Error("Specify sample period with '--sample-period'");
 
-            if (Enum.TryParse<SamplePeriod>(SamplePeriod, out var samplePeriod))
+            if (!Enum.TryParse<SamplePeriod>(SamplePeriod, out var samplePeriod))
                 return ValidationResult.Error("Sample mode must be either [second, minute, hour, day]");
 
             return ValidationResult.Success();

@@ -1,6 +1,8 @@
-﻿using System.Diagnostics;
+﻿using System.ComponentModel;
+using System.Diagnostics;
 using System.Text.Json;
 using EpochFlow.ApiClient;
+using EpochFlow.ApiClient.Projects;
 using EpochFlow.ApiClient.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -26,13 +28,13 @@ public sealed class ListSetsCommand : AsyncCommand<ListSetsCommand.Settings>
         using var scope = _serviceProvider.CreateScope();
         var httpClient = scope.ServiceProvider.GetRequiredService<HttpClient>();
         httpClient.BaseAddress = new Uri(settings.ApiUrl);
-        httpClient.DefaultRequestHeaders.Add("X-Account-Id", settings.AccountId);
         httpClient.DefaultRequestHeaders.Add("X-API-Key", settings.ApiKey);
 
         var epochFlowApi = RestService.For<IEpochFlowV1>(httpClient, new RefitSettings());
 
         var stopwatch = Stopwatch.StartNew();
-        var response = await epochFlowApi.ListMeasurementSets();
+        var response = await epochFlowApi.ListMeasurementSets(settings.ProjectId);
+
         stopwatch.Stop();
         _logger.LogInformation(
             "Completed with status code: status code: [{StatusCode}] in {Duration}ms",
@@ -49,7 +51,7 @@ public sealed class ListSetsCommand : AsyncCommand<ListSetsCommand.Settings>
         return 0;
     }
 
-    public sealed class Settings : EpochFlowBaseSettings
+    public sealed class Settings : ProjectBaseSettings
     {
         public override ValidationResult Validate()
         {

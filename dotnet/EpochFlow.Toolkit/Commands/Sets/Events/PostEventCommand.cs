@@ -2,8 +2,8 @@
 using System.Diagnostics;
 using EpochFlow.ApiClient;
 using EpochFlow.ApiClient.Events;
-using EpochFlow.ApiClient.Measurements;
 using EpochFlow.ApiClient.Utilities;
+using EpochFlow.Toolkit.Commands.Sets;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Refit;
@@ -28,18 +28,17 @@ public sealed class PostEventCommand : AsyncCommand<PostEventCommand.Settings>
         using var scope = _serviceProvider.CreateScope();
         var httpClient = scope.ServiceProvider.GetRequiredService<HttpClient>();
         httpClient.BaseAddress = new Uri(settings.ApiUrl);
-        httpClient.DefaultRequestHeaders.Add("X-Account-Id", settings.AccountId);
         httpClient.DefaultRequestHeaders.Add("X-API-Key", settings.ApiKey);
 
         var epochFlowApi = RestService.For<IEpochFlowV1>(httpClient, new RefitSettings());
         var stopwatch = Stopwatch.StartNew();
-        var response = await epochFlowApi.PostEvent(settings.SetId,
+        var response = await epochFlowApi.PostEvent(settings.ProjectId, settings.SetId,
             new EventDataPoint()
             {
                 Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
-                Tag = settings.Tag,
+                //Tag = settings.Tag,
                 Event = settings.Event,
-                CorrelationId = settings.CorrelationId
+                //CorrelationId = settings.CorrelationId
             });
 
         stopwatch.Stop();
@@ -53,7 +52,7 @@ public sealed class PostEventCommand : AsyncCommand<PostEventCommand.Settings>
         return 0;
     }
 
-    public sealed class Settings : EpochFlowBaseSettings
+    public sealed class Settings : ProjectBaseSettings
     {
         [CommandOption("--id")]
         [Description("Set Id")]
