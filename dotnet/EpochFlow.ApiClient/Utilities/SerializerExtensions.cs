@@ -17,7 +17,6 @@ public static class SerializerExtensions
         NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals | JsonNumberHandling.AllowReadingFromString,
         Converters =
         {
-            new EnumFlagsStringConverter<SamplePeriod>(),
             new EnumFlagsStringConverter<ProjectRole>(),
             new EnumFlagsStringConverter<SetOperations>(),
             new EnumFlagsStringConverter<SeasonalModelFilterType>(),
@@ -33,7 +32,6 @@ public static class SerializerExtensions
         options.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
         options.NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals |
                                  JsonNumberHandling.AllowReadingFromString;
-        options.Converters.Add(new EnumFlagsStringConverter<SamplePeriod>());
         options.Converters.Add(new EnumFlagsStringConverter<ProjectRole>());
         options.Converters.Add(new EnumFlagsStringConverter<SetOperations>());
         options.Converters.Add(new EnumFlagsStringConverter<SeasonalModelFilterType>());

@@ -8,7 +8,7 @@ public class MeasurementSet
     [JsonPropertyName("project_id")] public string ProjectId { get; set; } = string.Empty;
     [JsonPropertyName("id")] public string Id { get; set; } = string.Empty;
     [JsonPropertyName("name")] public string Name { get; set; } = string.Empty;
-    [JsonPropertyName("sample_period")] public SamplePeriod SamplePeriod { get; set; }
+    [JsonPropertyName("sample_period")] public int SamplePeriod { get; set; }
 
     [JsonPropertyName("archive_requested_at")]
     public long? ArchiveRequestedAt { get; set; }

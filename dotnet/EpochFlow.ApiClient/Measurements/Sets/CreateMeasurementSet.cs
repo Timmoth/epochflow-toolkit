@@ -15,9 +15,9 @@ public class CreateMeasurementSet
 
     [JsonPropertyName("sample_period")]
     [AliasAs("sample_period")]
-    public SamplePeriod SamplePeriod { get; set; }
+    public int SamplePeriod { get; set; }
 
-    public static CreateMeasurementSet Create(string name, SamplePeriod samplePeriod)
+    public static CreateMeasurementSet Create(string name, int samplePeriod)
     {
         return new CreateMeasurementSet
         {

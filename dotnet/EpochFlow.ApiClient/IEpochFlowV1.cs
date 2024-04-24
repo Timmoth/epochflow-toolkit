@@ -15,6 +15,7 @@ using EpochFlow.ApiClient.Models;
 using EpochFlow.ApiClient.Permissions;
 using EpochFlow.ApiClient.Projects;
 using EpochFlow.ApiClient.Projects.Members;
+using EpochFlow.ApiClient.Utilities;
 using EpochFlow.ApiClient.Webhooks;
 using Refit;
 
@@ -34,7 +35,7 @@ public interface IEpochFlowV1
     public Task<HttpResponseMessage> DeleteAccount();
 
     [Get("/api/v1/account/invites")]
-    public Task<ApiResponse<List<ProjectMember>>> ListInvites();
+    public Task<ApiResponse<ListResponse<ProjectMember>>> ListInvites();
 
     [Post("/api/v1/account/invites/{memberId}/accept")]
     public Task<HttpResponseMessage> AcceptProjectInvite(string memberId);
@@ -59,15 +60,15 @@ public interface IEpochFlowV1
     public Task<ApiResponse<Project>> UpdateProject(string projectId, [Body] UpdateProject request);
 
     [Get("/api/v1/projects")]
-    public Task<ApiResponse<List<Project>>> ListProjects();
+    public Task<ApiResponse<ListResponse<Project>>> ListProjects();
 
     #region Members
 
     [Post("/api/v1/projects/{projectId}/members")]
-    public Task<ApiResponse<ProjectMember>> InviteProjectMember(string projectId, InviteProjectMember request);
+    public Task<ApiResponse<ProjectMember>> InviteProjectMember(string projectId, [Body] InviteProjectMember request);
 
     [Get("/api/v1/projects/{projectId}/members")]
-    public Task<ApiResponse<List<ProjectMember>>> ListProjectMembers(string projectId);
+    public Task<ApiResponse<ListResponse<ProjectMember>>> ListProjectMembers(string projectId);
 
     [Patch("/api/v1/projects/{projectId}/members/{memberId}")]
     public Task<ApiResponse<ProjectMember>> UpdateProjectMember(string projectId, string memberId,
@@ -92,7 +93,7 @@ public interface IEpochFlowV1
     public Task<ApiResponse<string>> CreateApiKey(string projectId, [Body] CreateApiKey request);
 
     [Get("/api/v1/projects/{projectId}/keys")]
-    public Task<ApiResponse<List<ApiKey>>> ListApiKeys(string projectId);
+    public Task<ApiResponse<ListResponse<ApiKey>>> ListApiKeys(string projectId);
 
     [Post("/api/v1/projects/{projectId}/keys/{keyName}/enable")]
     public Task<HttpResponseMessage> EnableApiKey(string projectId, string keyName);
@@ -105,7 +106,7 @@ public interface IEpochFlowV1
     #region Webhooks
 
     [Get("/api/v1/projects/{projectId}/webhooks")]
-    public Task<ApiResponse<List<Webhook>>> ListWebhooks(string projectId);
+    public Task<ApiResponse<ListResponse<Webhook>>> ListWebhooks(string projectId);
 
     [Delete("/api/v1/projects/{projectId}/webhooks/{webhookId}")]
     public Task<HttpResponseMessage> DeleteWebhook(string projectId, string webhookId);
@@ -127,10 +128,10 @@ public interface IEpochFlowV1
     #region Pipelines
 
     [Get("/api/v1/projects/{projectId}/measurements/pipelines")]
-    public Task<ApiResponse<List<MeasurementPipeline>>> ListMeasurementPipelines(string projectId);
+    public Task<ApiResponse<ListResponse<MeasurementPipeline>>> ListMeasurementPipelines(string projectId);
 
     [Get("/api/v1/projects/{projectId}/measurements/{setId}/pipelines")]
-    public Task<ApiResponse<List<MeasurementPipeline>>> ListMeasurementPipelines(string projectId, string setId);
+    public Task<ApiResponse<ListResponse<MeasurementPipeline>>> ListMeasurementPipelines(string projectId, string setId);
 
     #region Measurement Update
 
@@ -139,7 +140,7 @@ public interface IEpochFlowV1
         string id);
 
     [Get("/api/v1/projects/{projectId}/measurements/{setId}/pipelines/measurement_update")]
-    public Task<ApiResponse<List<MeasurementUpdatePipeline>>> ListMeasurementUpdatePipeline(string projectId,
+    public Task<ApiResponse<ListResponse<MeasurementUpdatePipeline>>> ListMeasurementUpdatePipeline(string projectId,
         string setId);
 
     [Delete("/api/v1/projects/{projectId}/measurements/{setId}/pipelines/measurement_update/{id}")]
@@ -165,7 +166,7 @@ public interface IEpochFlowV1
         string id);
 
     [Get("/api/v1/projects/{projectId}/measurements/{setId}/pipelines/train_seasonal_model")]
-    public Task<ApiResponse<List<TrainSeasonalityModelPipeline>>> ListTrainSeasonalityPipelines(string projectId,
+    public Task<ApiResponse<ListResponse<TrainSeasonalityModelPipeline>>> ListTrainSeasonalityPipelines(string projectId,
         string setId);
 
     [Delete("/api/v1/projects/{projectId}/measurements/{setId}/pipelines/train_seasonal_model/{id}")]
@@ -201,7 +202,7 @@ public interface IEpochFlowV1
         string id);
 
     [Get("/api/v1/projects/{projectId}/measurements/{setId}/pipelines/seasonal_forecast")]
-    public Task<ApiResponse<List<SeasonalForecastPipeline>>> ListSeasonalForecastPipelines(string projectId,
+    public Task<ApiResponse<ListResponse<SeasonalForecastPipeline>>> ListSeasonalForecastPipelines(string projectId,
         string setId);
 
     [Delete("/api/v1/projects/{projectId}/measurements/{setId}/pipelines/seasonal_forecast/{id}")]
@@ -236,24 +237,24 @@ public interface IEpochFlowV1
         [Body] UpdateMeasurementSet request);
 
     [Get("/api/v1/projects/{projectId}/measurements")]
-    public Task<ApiResponse<List<MeasurementSet>>> ListMeasurementSets(string projectId);
+    public Task<ApiResponse<ListResponse<MeasurementSet>>> ListMeasurementSets(string projectId);
 
     #endregion
 
     #region Tags
 
     [Get("/api/v1/projects/{projectId}/measurements/{id}/tags")]
-    public Task<ApiResponse<List<string>>> ListMeasurementTags(string projectId, string id);
+    public Task<ApiResponse<ListResponse<string>>> ListMeasurementTags(string projectId, string id);
 
     #endregion
 
     #region Sources
 
     [Get("/api/v1/projects/{projectId}/measurements/{id}/sources")]
-    public Task<ApiResponse<List<MeasurementSource>>> ListMeasurementSources(string projectId, string id);
+    public Task<ApiResponse<ListResponse<MeasurementSource>>> ListMeasurementSources(string projectId, string id);
 
     [Delete("/api/v1/projects/{projectId}/measurements/{id}/sources")]
-    public Task<HttpResponseMessage> DeleteMeasurmentSources(string projectId, string id,
+    public Task<HttpResponseMessage> DeleteMeasurementSource(string projectId, string id,
         [Query] [AliasAs("source")] string source);
 
     #endregion
@@ -275,22 +276,24 @@ public interface IEpochFlowV1
         CancellationToken cancellationToken = default);
 
     [Get("/api/v1/projects/{projectId}/measurements/{setId}/data/archive")]
-    Task<ApiResponse<List<ArchiveUrlResponse>>> GetMeasurementSourceArchive(string projectId, string setId, [Query][AliasAs("name")] string? name = null,
+    Task<ApiResponse<ListResponse<ArchiveUrlResponse>>> GetMeasurementSourceArchive(string projectId, string setId, [Query][AliasAs("name")] string? name = null,
         CancellationToken cancellationToken = default);
 
     [Get("/api/v1/projects/{projectId}/measurements/{setId}/data/import/url")]
     Task<ApiResponse<string>> GetMeasurementUploadUrl(string projectId, string setId, [Query][AliasAs("name")] string name, CancellationToken cancellationToken = default);
 
     [Get("/api/v1/projects/{projectId}/measurements/{id}/data")]
-    public Task<ApiResponse<List<double[]>>> GetMeasurements(string projectId, string id,
-        [Query] GetDataRequest request);
-
-    [Get("/api/v1/projects/{projectId}/measurements/{id}/data/analytics/predicted")]
-    public Task<ApiResponse<List<double[]>>> GetPredictedMeasurements(string projectId, string id,
-        [Query] GetDataRequest request);
+    public Task<ApiResponse<ListResponse<double[]>>> GetMeasurements(string projectId, string id,
+        [Query][AliasAs("start")] long start,
+        [Query][AliasAs("end")] long end,
+        [Query][AliasAs("source")] string source,
+        [Query][AliasAs("tag")] string tag,
+        [Query][AliasAs("resolution")] QueryResolution resolution,
+        [Query][AliasAs("aggregation")] QueryAggregation aggregation,
+        [Query][AliasAs("filters")] List<string> filters);
 
     [Get("/api/v1/projects/{projectId}/measurements/{id}/data/aggregate/hour_of_day")]
-    public Task<ApiResponse<List<double[]>>> GetHourOfDayAggregate(string projectId, string id, 
+    public Task<ApiResponse<ListResponse<double[]>>> GetHourOfDayAggregate(string projectId, string id, 
         [Query][AliasAs("start")] long start,
         [Query][AliasAs("end")] long end,
         [Query][AliasAs("source")] string? source,
@@ -300,7 +303,7 @@ public interface IEpochFlowV1
         );
 
     [Get("/api/v1/projects/{projectId}/measurements/{id}/data/aggregate/hour_of_week")]
-    public Task<ApiResponse<List<double[]>>> GetHourOfWeekAggregate(string projectId, string id,
+    public Task<ApiResponse<ListResponse<double[]>>> GetHourOfWeekAggregate(string projectId, string id,
         [Query][AliasAs("start")] long start,
         [Query][AliasAs("end")] long end,
         [Query][AliasAs("source")] string? source,
@@ -310,7 +313,7 @@ public interface IEpochFlowV1
     );
 
     [Get("/api/v1/projects/{projectId}/measurements/{id}/data/aggregate/day_of_week")]
-    public Task<ApiResponse<List<double[]>>> GetDayOfWeekAggregate(string projectId, string id,
+    public Task<ApiResponse<ListResponse<double[]>>> GetDayOfWeekAggregate(string projectId, string id,
         [Query][AliasAs("start")] long start,
         [Query][AliasAs("end")] long end,
         [Query][AliasAs("source")] string? source,
@@ -320,12 +323,12 @@ public interface IEpochFlowV1
     );
 
     [Get("/api/v1/projects/{projectId}/measurements/{id}/data/sources/total")]
-    public Task<ApiResponse<List<MeasurementTotal>>> GetMeasurementSourceTotals(string projectId, string id,
+    public Task<ApiResponse<ListResponse<MeasurementTotal>>> GetMeasurementSourceTotals(string projectId, string id,
         [Query(CollectionFormat.Multi)]
         [AliasAs("sources")]List<string>? sources = null);
 
     [Get("/api/v1/projects/{projectId}/measurements/{id}/data/tags/total")]
-    public Task<ApiResponse<List<MeasurementTotal>>> GetMeasurementTagTotals(string projectId, string id,
+    public Task<ApiResponse<ListResponse<MeasurementTotal>>> GetMeasurementTagTotals(string projectId, string id,
         [Query(CollectionFormat.Multi)]
         [AliasAs("tags")]List<string>? tags = null);
 
@@ -344,10 +347,10 @@ public interface IEpochFlowV1
     #region Pipelines
 
     [Get("/api/v1/projects/{projectId}/events/pipelines")]
-    public Task<ApiResponse<List<EventPipeline>>> ListEventPipelines(string projectId);
+    public Task<ApiResponse<ListResponse<EventPipeline>>> ListEventPipelines(string projectId);
 
     [Get("/api/v1/projects/{projectId}/events/{setId}/pipelines")]
-    public Task<ApiResponse<List<EventPipeline>>> ListEventPipelines(string projectId, string setId);
+    public Task<ApiResponse<ListResponse<EventPipeline>>> ListEventPipelines(string projectId, string setId);
 
     #region Event Count
 
@@ -356,7 +359,7 @@ public interface IEpochFlowV1
         string id);
 
     [Get("/api/v1/projects/{projectId}/events/{setId}/pipelines/event_count")]
-    public Task<ApiResponse<List<EventCountPipeline>>> ListEventCountPipelines(string projectId,
+    public Task<ApiResponse<ListResponse<EventCountPipeline>>> ListEventCountPipelines(string projectId,
         string setId);
 
     [Delete("/api/v1/projects/{projectId}/events/{setId}/pipelines/event_count/{id}")]
@@ -379,11 +382,11 @@ public interface IEpochFlowV1
         string id);
 
     [Get("/api/v1/projects/{projectId}/events/{setId}/pipelines/event_state/{id}/states")]
-    public Task<ApiResponse<List<EventState>>> ListEventStates(string projectId, string setId,
+    public Task<ApiResponse<ListResponse<EventState>>> ListEventStates(string projectId, string setId,
         string id, [Query(CollectionFormat.Multi)][AliasAs("names")] List<string>? names = null, [Query(CollectionFormat.Multi)][AliasAs("properties")] List<string>? properties = null);
 
     [Get("/api/v1/projects/{projectId}/events/{setId}/pipelines/event_state")]
-    public Task<ApiResponse<List<EventStatePipeline>>> ListEventStatePipelines(string projectId,
+    public Task<ApiResponse<ListResponse<EventStatePipeline>>> ListEventStatePipelines(string projectId,
         string setId);
 
     [Delete("/api/v1/projects/{projectId}/events/{setId}/pipelines/event_state/{id}")]
@@ -416,34 +419,34 @@ public interface IEpochFlowV1
     public Task<ApiResponse<EventSet>> UpdateEventSet(string projectId, string id, [Body] UpdateEventSet request);
 
     [Get("/api/v1/projects/{projectId}/events")]
-    public Task<ApiResponse<List<EventSet>>> ListEventSets(string projectId);
+    public Task<ApiResponse<ListResponse<EventSet>>> ListEventSets(string projectId);
 
     #endregion
 
     #region Sources
 
     [Get("/api/v1/projects/{projectId}/events/{id}/sources")]
-    public Task<ApiResponse<List<EventSource>>> ListEventSources(string projectId, string id);
+    public Task<ApiResponse<ListResponse<EventSource>>> ListEventSources(string projectId, string id);
 
     [Delete("/api/v1/projects/{projectId}/events/{id}/sources")]
     public Task<HttpResponseMessage> DeleteEventSource(string projectId, string id,
         [Query] [AliasAs("source")] string source);
 
     [Get("/api/v1/projects/{projectId}/events/{id}/sources/total")]
-    public Task<ApiResponse<List<TagEventTotals>>> GetEventSourceTotal(string projectId, string id);
+    public Task<ApiResponse<ListResponse<TagEventTotals>>> GetEventSourceTotal(string projectId, string id);
 
     #endregion
 
     #region Tags
 
     [Get("/api/v1/projects/{projectId}/events/{id}/tags")]
-    public Task<ApiResponse<List<string>>> ListEventTags(string projectId, string id);
+    public Task<ApiResponse<ListResponse<string>>> ListEventTags(string projectId, string id);
 
     [Delete("/api/v1/projects/{projectId}/events/{id}/tags")]
     public Task<HttpResponseMessage> DeleteEventTag(string projectId, string id, [Query] [AliasAs("tag")] string tag);
 
     [Get("/api/v1/projects/{projectId}/events/{id}/tags/total")]
-    public Task<ApiResponse<List<TagEventTotals>>> GetEventTagsTotal(string projectId, string id);
+    public Task<ApiResponse<ListResponse<TagEventTotals>>> GetEventTagsTotal(string projectId, string id);
 
     #endregion
 
@@ -464,7 +467,7 @@ public interface IEpochFlowV1
         CancellationToken cancellationToken = default);
 
     [Get("/api/v1/projects/{projectId}/events/{setId}/data/archive")]
-    Task<ApiResponse<List<ArchiveUrlResponse>>> GetEventSourceArchive(string projectId, string setId, [Query][AliasAs("name")] string? name = null,
+    Task<ApiResponse<ListResponse<ArchiveUrlResponse>>> GetEventSourceArchive(string projectId, string setId, [Query][AliasAs("name")] string? name = null,
         CancellationToken cancellationToken = default);
 
     [Get("/api/v1/projects/{projectId}/events/{setId}/data/import/url")]
@@ -481,13 +484,13 @@ public interface IEpochFlowV1
         [Query] [AliasAs("event")] string @event);
 
     [Get("/api/v1/projects/{projectId}/events/{id}/types")]
-    public Task<ApiResponse<List<string>>> ListEventTypes(string projectId, string id);
+    public Task<ApiResponse<ListResponse<string>>> ListEventTypes(string projectId, string id);
 
     [Get("/api/v1/projects/{projectId}/events/{id}/types/total")]
-    public Task<ApiResponse<List<EventTypeTotals>>> GetEventTypesTotal(string projectId, string id);
+    public Task<ApiResponse<ListResponse<EventTypeTotals>>> GetEventTypesTotal(string projectId, string id);
 
     [Get("/api/v1/projects/{projectId}/events/{id}/data/count")]
-    public Task<ApiResponse<List<long[]>>> GetEventCounts(string projectId, string id,
+    public Task<ApiResponse<ListResponse<long[]>>> GetEventCounts(string projectId, string id,
         [Query] [AliasAs("event")] string? eventName,
         [Query] [AliasAs("start")] long startParam,
         [Query] [AliasAs("end")] long endParam,
@@ -496,7 +499,7 @@ public interface IEpochFlowV1
     );
 
     [Get("/api/v1/projects/{projectId}/events/{id}/data/numeric")]
-    public Task<ApiResponse<List<double?[]>>> GetEventNumericProperties(string projectId, string id,
+    public Task<ApiResponse<ListResponse<double?[]>>> GetEventNumericProperties(string projectId, string id,
         [Query][AliasAs("event")] string? eventName,
         [Query][AliasAs("start")] long startParam,
         [Query][AliasAs("end")] long endParam,
@@ -508,12 +511,13 @@ public interface IEpochFlowV1
     );
 
     [Get("/api/v1/projects/{projectId}/events/{id}/data")]
-    public Task<ApiResponse<List<EventDataPoint>>> GetEventData(string projectId, string id,
+    public Task<ApiResponse<ListResponse<EventDataPoint>>> GetEventData(string projectId, string id,
         [Query][AliasAs("event")] string? eventName,
         [Query][AliasAs("start")] long startParam,
         [Query][AliasAs("end")] long endParam,
         [Query][AliasAs("source")] string? source,
-        [Query][AliasAs("tag")] string? tag
+        [Query][AliasAs("tag")] string? tag,
+        [Query][AliasAs("correlation")] string? correlation
     );
 
     #endregion
