@@ -33,11 +33,8 @@ public sealed class CreateSetCommand : AsyncCommand<CreateSetCommand.Settings>
 
         var epochFlowApi = RestService.For<IEpochFlowV1>(httpClient, new RefitSettings());
 
-        if (!Enum.TryParse<SamplePeriod>(settings.SamplePeriod, out var samplePeriod))
-            return -1;
-
         var stopwatch = Stopwatch.StartNew();
-        var response = await epochFlowApi.CreateMeasurementSet(settings.ProjectId,CreateMeasurementSet.Create(settings.SetName, samplePeriod));
+        var response = await epochFlowApi.CreateMeasurementSet(settings.ProjectId,CreateMeasurementSet.Create(settings.SetName, settings.SamplePeriod));
         stopwatch.Stop();
         _logger.LogInformation(
             "Completed with status code: status code: [{StatusCode}] in {Duration}ms",
@@ -62,8 +59,8 @@ public sealed class CreateSetCommand : AsyncCommand<CreateSetCommand.Settings>
         public string SetName { get; set; } = string.Empty;
 
         [CommandOption("--sample-period")]
-        [Description("Sample period, either [second, minute, hour, day]")]
-        public string SamplePeriod { get; set; } = string.Empty;
+        [Description("Sample period, in minutes")]
+        public int SamplePeriod { get; set; } = 60;
 
         public override ValidationResult Validate()
         {
@@ -76,11 +73,8 @@ public sealed class CreateSetCommand : AsyncCommand<CreateSetCommand.Settings>
 
             if (SetName.Length > 256) return ValidationResult.Error("Set name must be 256 characters or less.");
 
-            if (string.IsNullOrWhiteSpace(SamplePeriod))
-                return ValidationResult.Error("Specify sample period with '--sample-period'");
-
-            if (!Enum.TryParse<SamplePeriod>(SamplePeriod, out var samplePeriod))
-                return ValidationResult.Error("Sample mode must be either [second, minute, hour, day]");
+            if(SamplePeriod <= 0 || SamplePeriod > 3600)
+                return ValidationResult.Error("Sample period must be between 1 and 3600 (1 day)");
 
             return ValidationResult.Success();
         }
