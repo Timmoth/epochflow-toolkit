@@ -11,4 +11,8 @@ public class CreateProject
     [MinLength(3)]
     [MaxLength(255)]
     public string Name { get; set; } = string.Empty;
+
+    [JsonPropertyName("retention_period")]
+    [Range(1, 365)]
+    public int? RetentionPeriod { get; set; }
 }

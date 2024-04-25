@@ -279,9 +279,6 @@ public interface IEpochFlowV1
     Task<ApiResponse<ListResponse<ArchiveUrlResponse>>> GetMeasurementSourceArchive(string projectId, string setId, [Query][AliasAs("name")] string? name = null,
         CancellationToken cancellationToken = default);
 
-    [Get("/api/v1/projects/{projectId}/measurements/{setId}/data/import/url")]
-    Task<ApiResponse<string>> GetMeasurementUploadUrl(string projectId, string setId, [Query][AliasAs("name")] string name, CancellationToken cancellationToken = default);
-
     [Get("/api/v1/projects/{projectId}/measurements/{id}/data")]
     public Task<ApiResponse<ListResponse<double[]>>> GetMeasurements(string projectId, string id,
         [Query][AliasAs("start")] long start,
@@ -470,9 +467,6 @@ public interface IEpochFlowV1
     Task<ApiResponse<ListResponse<ArchiveUrlResponse>>> GetEventSourceArchive(string projectId, string setId, [Query][AliasAs("name")] string? name = null,
         CancellationToken cancellationToken = default);
 
-    [Get("/api/v1/projects/{projectId}/events/{setId}/data/import/url")]
-    Task<ApiResponse<string>> GetEventUploadUrl(string projectId, string setId, [Query][AliasAs("name")] string name, CancellationToken cancellationToken = default);
-
     [Post("/api/v1/projects/{projectId}/events/{id}/data")]
     public Task<HttpResponseMessage> PostEvent(string projectId, string id, [Body] EventDataPoint request);
 
@@ -495,6 +489,7 @@ public interface IEpochFlowV1
         [Query] [AliasAs("start")] long startParam,
         [Query] [AliasAs("end")] long endParam,
         [Query] [AliasAs("source")] string? source,
+        [Query] [AliasAs("tag")] string? tag,
         [Query] [AliasAs("resolution")] QueryResolution resolution
     );
 
