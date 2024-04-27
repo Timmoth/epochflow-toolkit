@@ -289,6 +289,23 @@ public interface IEpochFlowV1
         [Query][AliasAs("aggregation")] QueryAggregation aggregation,
         [Query][AliasAs("filters")] List<string> filters);
 
+    [Get("/api/v1/projects/{projectId}/measurements/{id}/data/normalized")]
+    public Task<ApiResponse<ListResponse<double[]>>> GetNormalizedMeasurements(string projectId, string id,
+        [Query][AliasAs("start")] long start,
+        [Query][AliasAs("end")] long end,
+        [Query][AliasAs("source")] string source,
+        [Query][AliasAs("tag")] string tag,
+        [Query][AliasAs("resolution")] QueryResolution resolution,
+        [Query][AliasAs("aggregation")] QueryAggregation aggregation);
+
+    [Get("/api/v1/projects/{projectId}/measurements/{id}/data/sources/stats")]
+    public Task<ApiResponse<MeasurementStats>> GetMeasurementSourceStats(string projectId, string id,
+        [Query][AliasAs("source")] string source);
+
+    [Get("/api/v1/projects/{projectId}/measurements/{id}/data/tags/stats")]
+    public Task<ApiResponse<MeasurementStats>> GetMeasurementTagsStats(string projectId, string id,
+        [Query][AliasAs("tag")] string tag);
+
     [Get("/api/v1/projects/{projectId}/measurements/{id}/data/aggregate/hour_of_day")]
     public Task<ApiResponse<ListResponse<double[]>>> GetHourOfDayAggregate(string projectId, string id, 
         [Query][AliasAs("start")] long start,

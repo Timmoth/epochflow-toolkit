@@ -17,12 +17,17 @@ public class CreateMeasurementSet
     [AliasAs("sample_period")]
     public int SamplePeriod { get; set; }
 
-    public static CreateMeasurementSet Create(string name, int samplePeriod)
+    [JsonPropertyName("retention_period")]
+    [Range(1, 365)]
+    public int? RetentionPeriod { get; set; }
+
+    public static CreateMeasurementSet Create(string name, int samplePeriod, int? retentionPeriod)
     {
         return new CreateMeasurementSet
         {
             Name = name,
-            SamplePeriod = samplePeriod
+            SamplePeriod = samplePeriod, 
+            RetentionPeriod = retentionPeriod
         };
     }
 }

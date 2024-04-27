@@ -15,4 +15,7 @@ public class MeasurementSet
 
     [JsonPropertyName("archive_updated_at")]
     public long? ArchiveUpdatedAt { get; set; }
+
+    [JsonPropertyName("retention_period")]
+    public int? RetentionPeriod { get; set; }
 }
