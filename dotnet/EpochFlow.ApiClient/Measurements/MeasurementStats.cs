@@ -13,9 +13,13 @@ public class MeasurementStats
     [JsonPropertyName("count")]
 
     public long Count { get; set; }
-    [JsonPropertyName("percentile_01")]
 
+    [JsonPropertyName("percentile_01")]
     public double Percentile01 { get; set; }
+
+    [JsonPropertyName("percentile_05")]
+    public double Percentile05 { get; set; }
+
     [JsonPropertyName("percentile_25")]
 
     public double Percentile25 { get; set; }
@@ -25,8 +29,11 @@ public class MeasurementStats
     [JsonPropertyName("percentile_75")]
 
     public double Percentile75 { get; set; }
-    [JsonPropertyName("percentile_99")]
 
+    [JsonPropertyName("percentile_95")]
+    public double Percentile95 { get; set; }
+
+    [JsonPropertyName("percentile_99")]
     public double Percentile99 { get; set; }
     [JsonPropertyName("stdev")]
 

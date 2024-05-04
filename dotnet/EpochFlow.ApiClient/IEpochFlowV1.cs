@@ -2,7 +2,6 @@
 using EpochFlow.ApiClient.Analytics;
 using EpochFlow.ApiClient.Events;
 using EpochFlow.ApiClient.Events.Pipelines;
-using EpochFlow.ApiClient.Events.Pipelines.EventCount;
 using EpochFlow.ApiClient.Events.Pipelines.EventState;
 using EpochFlow.ApiClient.Events.Sets;
 using EpochFlow.ApiClient.Measurements;
@@ -244,14 +243,14 @@ public interface IEpochFlowV1
     #region Tags
 
     [Get("/api/v1/projects/{projectId}/measurements/{id}/tags")]
-    public Task<ApiResponse<ListResponse<string>>> ListMeasurementTags(string projectId, string id);
+    public Task<ApiResponse<ListResponse<MeasurementTag>>> ListMeasurementTags(string projectId, string id);
 
     #endregion
 
     #region Sources
 
     [Get("/api/v1/projects/{projectId}/measurements/{id}/sources")]
-    public Task<ApiResponse<ListResponse<MeasurementSource>>> ListMeasurementSources(string projectId, string id);
+    public Task<ApiResponse<ListResponse<MeasurementSource>>> ListMeasurementSources(string projectId, string id, [Query, AliasAs("source")] string? source = null);
 
     [Delete("/api/v1/projects/{projectId}/measurements/{id}/sources")]
     public Task<HttpResponseMessage> DeleteMeasurementSource(string projectId, string id,
@@ -289,22 +288,12 @@ public interface IEpochFlowV1
         [Query][AliasAs("aggregation")] QueryAggregation aggregation,
         [Query][AliasAs("filters")] List<string> filters);
 
-    [Get("/api/v1/projects/{projectId}/measurements/{id}/data/normalized")]
-    public Task<ApiResponse<ListResponse<double[]>>> GetNormalizedMeasurements(string projectId, string id,
+    [Get("/api/v1/projects/{projectId}/measurements/{id}/data/stats")]
+    public Task<ApiResponse<MeasurementStats>> GetMeasurementStats(string projectId, string id,
         [Query][AliasAs("start")] long start,
         [Query][AliasAs("end")] long end,
-        [Query][AliasAs("source")] string source,
-        [Query][AliasAs("tag")] string tag,
-        [Query][AliasAs("resolution")] QueryResolution resolution,
-        [Query][AliasAs("aggregation")] QueryAggregation aggregation);
-
-    [Get("/api/v1/projects/{projectId}/measurements/{id}/data/sources/stats")]
-    public Task<ApiResponse<MeasurementStats>> GetMeasurementSourceStats(string projectId, string id,
-        [Query][AliasAs("source")] string source);
-
-    [Get("/api/v1/projects/{projectId}/measurements/{id}/data/tags/stats")]
-    public Task<ApiResponse<MeasurementStats>> GetMeasurementTagsStats(string projectId, string id,
-        [Query][AliasAs("tag")] string tag);
+        [Query][AliasAs("source")] string? source,
+        [Query][AliasAs("tag")] string? tag);
 
     [Get("/api/v1/projects/{projectId}/measurements/{id}/data/aggregate/hour_of_day")]
     public Task<ApiResponse<ListResponse<double[]>>> GetHourOfDayAggregate(string projectId, string id, 
@@ -336,16 +325,6 @@ public interface IEpochFlowV1
         CancellationToken cancellationToken = default
     );
 
-    [Get("/api/v1/projects/{projectId}/measurements/{id}/data/sources/total")]
-    public Task<ApiResponse<ListResponse<MeasurementTotal>>> GetMeasurementSourceTotals(string projectId, string id,
-        [Query(CollectionFormat.Multi)]
-        [AliasAs("sources")]List<string>? sources = null);
-
-    [Get("/api/v1/projects/{projectId}/measurements/{id}/data/tags/total")]
-    public Task<ApiResponse<ListResponse<MeasurementTotal>>> GetMeasurementTagTotals(string projectId, string id,
-        [Query(CollectionFormat.Multi)]
-        [AliasAs("tags")]List<string>? tags = null);
-
     [Post("/api/v1/projects/{projectId}/measurements/{id}/data")]
     public Task<HttpResponseMessage> PostMeasurement(string projectId, string id, [Body] Measurement request);
 
@@ -365,29 +344,6 @@ public interface IEpochFlowV1
 
     [Get("/api/v1/projects/{projectId}/events/{setId}/pipelines")]
     public Task<ApiResponse<ListResponse<EventPipeline>>> ListEventPipelines(string projectId, string setId);
-
-    #region Event Count
-
-    [Get("/api/v1/projects/{projectId}/events/{setId}/pipelines/event_count/{id}")]
-    public Task<ApiResponse<EventCountPipeline>> GetEventCountPipeline(string projectId, string setId,
-        string id);
-
-    [Get("/api/v1/projects/{projectId}/events/{setId}/pipelines/event_count")]
-    public Task<ApiResponse<ListResponse<EventCountPipeline>>> ListEventCountPipelines(string projectId,
-        string setId);
-
-    [Delete("/api/v1/projects/{projectId}/events/{setId}/pipelines/event_count/{id}")]
-    public Task<HttpResponseMessage> DeleteEventCountPipeline(string projectId, string setId, string id);
-
-    [Post("/api/v1/projects/{projectId}/events/{setId}/pipelines/event_count")]
-    public Task<ApiResponse<EventCountPipeline>> CreateEventCountPipeline(string projectId,
-        string setId, [Body] CreateEventCountPipeline request);
-
-    [Patch("/api/v1/projects/{projectId}/events/{setId}/pipelines/event_count/{id}")]
-    public Task<ApiResponse<EventCountPipeline>> UpdateEventCountPipeline(string projectId,
-        string setId, string id, [Body] UpdateEventCountPipeline request);
-
-    #endregion
 
     #region Event State
 
@@ -446,9 +402,6 @@ public interface IEpochFlowV1
     public Task<HttpResponseMessage> DeleteEventSource(string projectId, string id,
         [Query] [AliasAs("source")] string source);
 
-    [Get("/api/v1/projects/{projectId}/events/{id}/sources/total")]
-    public Task<ApiResponse<ListResponse<TagEventTotals>>> GetEventSourceTotal(string projectId, string id);
-
     #endregion
 
     #region Tags
@@ -458,9 +411,6 @@ public interface IEpochFlowV1
 
     [Delete("/api/v1/projects/{projectId}/events/{id}/tags")]
     public Task<HttpResponseMessage> DeleteEventTag(string projectId, string id, [Query] [AliasAs("tag")] string tag);
-
-    [Get("/api/v1/projects/{projectId}/events/{id}/tags/total")]
-    public Task<ApiResponse<ListResponse<TagEventTotals>>> GetEventTagsTotal(string projectId, string id);
 
     #endregion
 
@@ -502,21 +452,23 @@ public interface IEpochFlowV1
 
     [Get("/api/v1/projects/{projectId}/events/{id}/data/count")]
     public Task<ApiResponse<ListResponse<long[]>>> GetEventCounts(string projectId, string id,
-        [Query] [AliasAs("event")] string? eventName,
         [Query] [AliasAs("start")] long startParam,
         [Query] [AliasAs("end")] long endParam,
+        [Query] [AliasAs("event")] string? eventName,
         [Query] [AliasAs("source")] string? source,
         [Query] [AliasAs("tag")] string? tag,
+        [Query] [AliasAs("correlation")] string? correlation,
         [Query] [AliasAs("resolution")] QueryResolution resolution
     );
 
     [Get("/api/v1/projects/{projectId}/events/{id}/data/numeric")]
     public Task<ApiResponse<ListResponse<double?[]>>> GetEventNumericProperties(string projectId, string id,
-        [Query][AliasAs("event")] string? eventName,
         [Query][AliasAs("start")] long startParam,
         [Query][AliasAs("end")] long endParam,
+        [Query][AliasAs("event")] string? eventName,
         [Query][AliasAs("source")] string? source,
         [Query][AliasAs("tag")] string? tag,
+        [Query][AliasAs("correlation")] string? correlation,
         [Query(CollectionFormat.Multi)][AliasAs("properties")] List<string> properties,
         [Query][AliasAs("resolution")] QueryResolution resolution,
         [Query][AliasAs("aggregation")] QueryAggregation aggregation
