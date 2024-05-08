@@ -1,14 +1,12 @@
 ﻿using EpochFlow.ApiClient.Accounts;
-using EpochFlow.ApiClient.Analytics;
 using EpochFlow.ApiClient.Events;
 using EpochFlow.ApiClient.Events.Pipelines;
 using EpochFlow.ApiClient.Events.Pipelines.EventState;
 using EpochFlow.ApiClient.Events.Sets;
 using EpochFlow.ApiClient.Measurements;
 using EpochFlow.ApiClient.Measurements.Pipelines;
+using EpochFlow.ApiClient.Measurements.Pipelines.MeasurementForecast;
 using EpochFlow.ApiClient.Measurements.Pipelines.MeasurementUpdate;
-using EpochFlow.ApiClient.Measurements.Pipelines.SeasonalForecast;
-using EpochFlow.ApiClient.Measurements.Pipelines.TrainSeasonalityModel;
 using EpochFlow.ApiClient.Measurements.Sets;
 using EpochFlow.ApiClient.Models;
 using EpochFlow.ApiClient.Permissions;
@@ -131,7 +129,6 @@ public interface IEpochFlowV1
 
     [Get("/api/v1/projects/{projectId}/measurements/{setId}/pipelines")]
     public Task<ApiResponse<ListResponse<MeasurementPipeline>>> ListMeasurementPipelines(string projectId, string setId);
-
     #region Measurement Update
 
     [Get("/api/v1/projects/{projectId}/measurements/{setId}/pipelines/measurement_update/{id}")]
@@ -155,65 +152,36 @@ public interface IEpochFlowV1
 
     #endregion
 
-    #region Train Seasonality
+    #region Measurement Forecast
 
-    [Post("/api/v1/projects/{projectId}/measurements/{setId}/pipelines/train_seasonal_model/{id}/train")]
-    public Task<HttpResponseMessage> TrainSeasonalityPipeline(string projectId, string setId, string id);
+    [Post("/api/v1/projects/{projectId}/measurements/{setId}/pipelines/measurement_forecast")]
+    public Task<ApiResponse<MeasurementForecastPipeline>> CreateMeasurementForecastPipeline(string projectId,
+        string setId, [Body] CreateMeasurementForecastPipeline request);
 
-    [Get("/api/v1/projects/{projectId}/measurements/{setId}/pipelines/train_seasonal_model/{id}")]
-    public Task<ApiResponse<TrainSeasonalityModelPipeline>> GetTrainSeasonalityPipeline(string projectId, string setId,
-        string id);
-
-    [Get("/api/v1/projects/{projectId}/measurements/{setId}/pipelines/train_seasonal_model")]
-    public Task<ApiResponse<ListResponse<TrainSeasonalityModelPipeline>>> ListTrainSeasonalityPipelines(string projectId,
+    [Get("/api/v1/projects/{projectId}/measurements/{setId}/pipelines/measurement_forecast")]
+    public Task<ApiResponse<ListResponse<MeasurementForecastPipeline>>> ListMeasurementForecastPipelines(string projectId,
         string setId);
 
-    [Delete("/api/v1/projects/{projectId}/measurements/{setId}/pipelines/train_seasonal_model/{id}")]
-    public Task<HttpResponseMessage> DeleteTrainSeasonalityPipeline(string projectId, string setId, string id);
+    [Post("/api/v1/projects/{projectId}/measurements/{setId}/pipelines/measurement_forecast/{id}/train")]
+    public Task<HttpResponseMessage> TrainMeasurementForecastPipeline(string projectId, string setId, string id);
 
-    [Post("/api/v1/projects/{projectId}/measurements/{setId}/pipelines/train_seasonal_model")]
-    public Task<ApiResponse<TrainSeasonalityModelPipeline>> CreateTrainSeasonalityPipeline(string projectId,
-        string setId, [Body] CreateTrainSeasonalityPipeline request);
+    [Get("/api/v1/projects/{projectId}/measurements/{setId}/pipelines/measurement_forecast/{id}/forecast")]
+    public Task<ApiResponse<ListResponse<double[]>>> GetForecast(string projectId, string setId, string id,
+        [Query][AliasAs("start")] long start,
+        [Query][AliasAs("end")] long end,
+        [Query][AliasAs("filter_id")] string filterId,
+        [Query][AliasAs("filter_type")] MeasurementForecastFilterType filterType);
 
-    [Patch("/api/v1/projects/{projectId}/measurements/{setId}/pipelines/train_seasonal_model/{id}")]
-    public Task<ApiResponse<TrainSeasonalityModelPipeline>> UpdateTrainSeasonalityPipeline(string projectId,
-        string setId, string id, [Body] UpdateTrainSeasonalityPipeline request);
-
-    [Get(
-        "/api/v1/projects/{projectId}/measurements/{setId}/pipelines/train_seasonal_model/{pipelineId}/seasonality/{filter}")]
-    public Task<ApiResponse<SeasonalityResponse>> GetMeasurementSeasonality(string projectId, string setId,
-        string pipelineId, string filter);
-
-    #endregion
-
-    #region Seasonal Forecast
-
-    [Post("/api/v1/projects/{projectId}/measurements/{setId}/pipelines/seasonal_forecast/{id}/forecast")]
-    public Task<HttpResponseMessage> RunForecastPipeline(string projectId, string setId, string id,
-        [Query] [AliasAs("start")] long startParam,
-        [Query] [AliasAs("end")] long endParam);
-
-    [Post("/api/v1/projects/{projectId}/measurements/{setId}/pipelines/seasonal_forecast/{id}/train")]
-    public Task<HttpResponseMessage> SeasonalForecastPipeline(string projectId, string setId, string id);
-
-    [Get("/api/v1/projects/{projectId}/measurements/{setId}/pipelines/seasonal_forecast/{id}")]
-    public Task<ApiResponse<SeasonalForecastPipeline>> GetSeasonalForecastPipeline(string projectId, string setId,
+    [Get("/api/v1/projects/{projectId}/measurements/{setId}/pipelines/measurement_forecast/{id}")]
+    public Task<ApiResponse<MeasurementForecastPipeline>> GetMeasurementForecastPipeline(string projectId, string setId,
         string id);
 
-    [Get("/api/v1/projects/{projectId}/measurements/{setId}/pipelines/seasonal_forecast")]
-    public Task<ApiResponse<ListResponse<SeasonalForecastPipeline>>> ListSeasonalForecastPipelines(string projectId,
-        string setId);
+    [Delete("/api/v1/projects/{projectId}/measurements/{setId}/pipelines/measurement_forecast/{id}")]
+    public Task<HttpResponseMessage> DeleteMeasurementForecastPipeline(string projectId, string setId, string id);
 
-    [Delete("/api/v1/projects/{projectId}/measurements/{setId}/pipelines/seasonal_forecast/{id}")]
-    public Task<HttpResponseMessage> DeleteSeasonalForecastPipeline(string projectId, string setId, string id);
-
-    [Post("/api/v1/projects/{projectId}/measurements/{setId}/pipelines/seasonal_forecast")]
-    public Task<ApiResponse<SeasonalForecastPipeline>> CreateSeasonalForecastPipeline(string projectId, string setId,
-        [Body] PostSeasonalForecastPipelineRequest request);
-
-    [Patch("/api/v1/projects/{projectId}/measurements/{setId}/pipelines/seasonal_forecast/{id}")]
-    public Task<ApiResponse<SeasonalForecastPipeline>> UpdateSeasonalForecastPipeline(string projectId, string setId,
-        string id, [Body] PatchSeasonalForecastPipelineRequest request);
+    [Patch("/api/v1/projects/{projectId}/measurements/{setId}/pipelines/measurement_forecast/{id}")]
+    public Task<ApiResponse<MeasurementForecastPipeline>> UpdateMeasurementForecastPipeline(string projectId,
+        string setId, string id, [Body] UpdateMeasurementForecastPipeline request);
 
     #endregion
 
@@ -322,6 +290,15 @@ public interface IEpochFlowV1
         [Query][AliasAs("source")] string? source,
         [Query][AliasAs("tag")] string? tag,
         [Query][AliasAs("aggregation")] QueryAggregation aggregation,
+        CancellationToken cancellationToken = default
+    );
+
+    [Get("/api/v1/projects/{projectId}/measurements/{id}/data/stl")]
+    public Task<ApiResponse<ListResponse<double[]>>> GetStl(string projectId, string id,
+        [Query][AliasAs("start")] long start,
+        [Query][AliasAs("end")] long end,
+        [Query][AliasAs("source")] string? source,
+        [Query][AliasAs("tag")] string? tag,
         CancellationToken cancellationToken = default
     );
 

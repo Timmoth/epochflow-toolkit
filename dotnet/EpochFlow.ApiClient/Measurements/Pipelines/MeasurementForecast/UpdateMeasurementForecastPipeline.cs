@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace EpochFlow.ApiClient.Measurements.Pipelines.TrainSeasonalityModel;
+namespace EpochFlow.ApiClient.Measurements.Pipelines.MeasurementForecast;
 
-public class UpdateTrainSeasonalityPipeline
+public class UpdateMeasurementForecastPipeline
 {
     [JsonPropertyName("name")]
     [MinLength(3)]
