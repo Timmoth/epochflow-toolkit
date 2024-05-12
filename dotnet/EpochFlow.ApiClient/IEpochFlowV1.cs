@@ -12,6 +12,7 @@ using EpochFlow.ApiClient.Models;
 using EpochFlow.ApiClient.Permissions;
 using EpochFlow.ApiClient.Projects;
 using EpochFlow.ApiClient.Projects.Members;
+using EpochFlow.ApiClient.Tables;
 using EpochFlow.ApiClient.Utilities;
 using EpochFlow.ApiClient.Webhooks;
 using Refit;
@@ -462,6 +463,14 @@ public interface IEpochFlowV1
     );
 
     #endregion
+
+    #endregion
+
+    #region Tables
+
+    [Get("/api/v1/projects/{projectId}/tables")]
+    public Task<ApiResponse<NumericListResponse>> GetTable(string projectId, [Body] TableQuery request);
+
 
     #endregion
 }
