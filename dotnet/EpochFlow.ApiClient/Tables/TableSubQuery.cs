@@ -11,4 +11,7 @@ public abstract class TableSubQuery
 {
     [JsonPropertyName("type")]
     public abstract string Type { get; }
+
+    [JsonPropertyName("name")]
+    public string Name { get; set; }
 }

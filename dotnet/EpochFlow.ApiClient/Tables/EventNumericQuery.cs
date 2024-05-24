@@ -9,22 +9,21 @@ public class EventNumericQuery : TableSubQuery
     public string SetId { get; set; }
 
     [JsonPropertyName("sources")]
-    public string[]? Sources { get; set; }
+    public List<string> Sources { get; set; } = new();
 
     [JsonPropertyName("tags")]
-    public string[]? Tags { get; set; }
+    public List<string> Tags { get; set; } = new();
 
     [JsonPropertyName("events")]
-    public string[]? Events { get; set; }
+    public List<string> Events { get; set; } = new();
 
     [JsonPropertyName("correlations")]
-    public string[]? Correlations { get; set; }
+    public List<string> Correlations { get; set; } = new();
 
     [JsonPropertyName("properties")]
-    public string[] Properties { get; set; }
+    public List<string> Properties { get; set; } = new();
 
-    [JsonPropertyName("aggregation")]
-    public QueryAggregation[] Aggregation { get; set; }
+    [JsonPropertyName("aggregation")] public List<QueryAggregation> Aggregation { get; set; } = new();
 
     public override string Type => "event_numeric";
 }

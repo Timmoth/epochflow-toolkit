@@ -1,14 +1,13 @@
 using System.Text.Json.Serialization;
 
-namespace EpochFlow.ApiClient.Models;
+namespace EpochFlow.ApiClient.Tables.Stats;
 
 [JsonConverter(typeof(JsonStringEnumConverter))]
-public enum QueryAggregation
+public enum QueryStats
 {
-    Sum,
-    Average,
     Min,
     Max,
+    Average,
     Count,
     P01,
     P05,

@@ -9,18 +9,13 @@ public class MeasurementQuery : TableSubQuery
     public string SetId { get; set; }
 
     [JsonPropertyName("sources")]
-    public string[]? Sources { get; set; }
+    public List<string> Sources { get; set; } = new List<string>();
 
     [JsonPropertyName("tags")]
-    public string[]? Tags { get; set; }
+    public List<string> Tags { get; set; } = new List<string>();
 
     [JsonPropertyName("aggregation")]
-    public QueryAggregation[] Aggregation { get; set; }
+    public List<QueryAggregation> Aggregation { get; set; } = new();
     public override string Type => "measurement";
 
-    [JsonIgnore]
-    public long[]? SourceIds { get; set; }
-
-    [JsonIgnore]
-    public long[]? TagIds { get; set; }
 }

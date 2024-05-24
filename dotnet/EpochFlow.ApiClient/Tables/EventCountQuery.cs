@@ -8,15 +8,14 @@ public class EventCountQuery : TableSubQuery
     public string SetId { get; set; }
 
     [JsonPropertyName("sources")]
-    public string[]? Sources { get; set; }
+    public List<string> Sources { get; set; } = new();
 
     [JsonPropertyName("tags")]
-    public string[]? Tags { get; set; }
+    public List<string> Tags { get; set; } = new();
 
     [JsonPropertyName("events")]
-    public string[]? Events { get; set; }
+    public List<string> Events { get; set; } = new();
 
-    [JsonPropertyName("correlations")]
-    public string[]? Correlations { get; set; }
+    [JsonPropertyName("correlations")] public List<string> Correlations { get; set; } = new();
     public override string Type => "event_count";
 }

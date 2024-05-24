@@ -10,5 +10,4 @@ public class Webhook
     [JsonPropertyName("url")] public string Url { get; set; } = string.Empty;
     [JsonPropertyName("headers")] public Dictionary<string, string> Headers { get; set; } = new();
     [JsonPropertyName("enabled")] public bool Enabled { get; set; } = false;
-    [JsonPropertyName("request_logs")] public List<WebhookLog> RequestLogs { get; set; } = new();
 }

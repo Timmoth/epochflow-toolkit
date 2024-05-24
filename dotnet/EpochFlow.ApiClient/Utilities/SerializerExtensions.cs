@@ -1,8 +1,5 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
-using EpochFlow.ApiClient.Events.Pipelines.EventState;
-using EpochFlow.ApiClient.Measurements.Pipelines.MeasurementForecast;
-using EpochFlow.ApiClient.Models;
 using EpochFlow.ApiClient.Permissions;
 
 namespace EpochFlow.ApiClient.Utilities;
@@ -19,8 +16,6 @@ public static class SerializerExtensions
         {
             new EnumFlagsStringConverter<ProjectRole>(),
             new EnumFlagsStringConverter<SetOperations>(),
-            new EnumFlagsStringConverter<MeasurementForecastFilterType>(),
-            new EnumFlagsStringConverter<EventStateGrouping>()
         }
     };
 
@@ -33,8 +28,6 @@ public static class SerializerExtensions
                                  JsonNumberHandling.AllowReadingFromString;
         options.Converters.Add(new EnumFlagsStringConverter<ProjectRole>());
         options.Converters.Add(new EnumFlagsStringConverter<SetOperations>());
-        options.Converters.Add(new EnumFlagsStringConverter<MeasurementForecastFilterType>());
-        options.Converters.Add(new EnumFlagsStringConverter<EventStateGrouping>());
 
         return options;
     }
