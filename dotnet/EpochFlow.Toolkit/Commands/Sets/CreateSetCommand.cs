@@ -34,7 +34,7 @@ public sealed class CreateSetCommand : AsyncCommand<CreateSetCommand.Settings>
         var epochFlowApi = RestService.For<IEpochFlowV1>(httpClient, new RefitSettings());
 
         var stopwatch = Stopwatch.StartNew();
-        var response = await epochFlowApi.CreateMeasurementSet(settings.ProjectId,CreateMeasurementSet.Create(settings.SetName, settings.SamplePeriod));
+        var response = await epochFlowApi.CreateMeasurementSet(settings.ProjectId,CreateMeasurementSet.Create(settings.SetName, settings.SamplePeriod, settings.RetentionPeriod));
         stopwatch.Stop();
         _logger.LogInformation(
             "Completed with status code: status code: [{StatusCode}] in {Duration}ms",
@@ -62,6 +62,9 @@ public sealed class CreateSetCommand : AsyncCommand<CreateSetCommand.Settings>
         [Description("Sample period, in minutes")]
         public int SamplePeriod { get; set; } = 60;
 
+        [CommandOption("--retention-period")]
+        [Description("Retention period, in days")]
+        public int? RetentionPeriod { get; set; }
         public override ValidationResult Validate()
         {
             var baseValidationResult = base.Validate();
@@ -73,9 +76,9 @@ public sealed class CreateSetCommand : AsyncCommand<CreateSetCommand.Settings>
 
             if (SetName.Length > 256) return ValidationResult.Error("Set name must be 256 characters or less.");
 
-            if(SamplePeriod <= 0 || SamplePeriod > 3600)
+            if(SamplePeriod is <= 0 or > 3600)
                 return ValidationResult.Error("Sample period must be between 1 and 3600 (1 day)");
-
+            
             return ValidationResult.Success();
         }
     }

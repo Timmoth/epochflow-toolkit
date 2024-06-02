@@ -6,7 +6,6 @@ namespace EpochFlow.ApiClient.Tables;
 [JsonDerivedType(typeof(EventCountQuery), "event_count")]
 [JsonDerivedType(typeof(EventNumericQuery), "event_numeric")]
 [JsonDerivedType(typeof(MeasurementQuery), "measurement")]
-[JsonDerivedType(typeof(MeasurementSeasonalityQuery), "measurement_seasonality")]
 public abstract class TableSubQuery
 {
     [JsonPropertyName("type")]

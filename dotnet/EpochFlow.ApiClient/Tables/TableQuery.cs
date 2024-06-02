@@ -11,6 +11,9 @@ public class TableQuery
     [JsonPropertyName("end")]
     public long End { get; set; }
 
+    [JsonPropertyName("realtime")]
+    public bool? Realtime { get; set; } = false;
+
     [JsonPropertyName("resolution")]
     public QueryResolution Resolution { get; set; }
 

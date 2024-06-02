@@ -1,6 +1,6 @@
 ﻿using EpochFlow.Toolkit.Commands.DataGenerator;
 using EpochFlow.Toolkit.Commands.Sets;
-using EpochFlow.Toolkit.Commands.Sets.Data;
+using EpochFlow.Toolkit.Commands.Sets.Events;
 using EpochFlow.Toolkit.Commands.Sets.Tags;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -43,9 +43,6 @@ internal class Program
 
             #region Data
 
-            config.AddCommand<GetDataCommand>("get-data")
-                .WithDescription("Queries a set for data points.");
-
             config.AddCommand<GenerateDataCommand>("generate-data")
                 .WithDescription("Posts a random measurement every 10 seconds for 5 minutes.");
 
@@ -55,6 +52,12 @@ internal class Program
 
             config.AddCommand<PostEventCommand>("post-event")
                 .WithDescription("Posts an event.");
+            
+            config.AddCommand<ExportEventsCommand>("export-events")
+                .WithDescription("Exports events.");    
+            
+            config.AddCommand<ExportMeasurementsCommand>("export-measurements")
+                .WithDescription("Exports measurements.");
 
             #endregion
         });

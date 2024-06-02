@@ -8,6 +8,7 @@ public enum QueryStats
     Min,
     Max,
     Average,
+    Sum,
     Count,
     P01,
     P05,
@@ -16,5 +17,4 @@ public enum QueryStats
     P75,
     P95,
     P99,
-    SD
 }

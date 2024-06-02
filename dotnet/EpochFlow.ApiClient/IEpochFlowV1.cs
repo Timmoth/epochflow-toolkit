@@ -194,17 +194,6 @@ public interface IEpochFlowV1
 
     #region Data
 
-    [Get("/api/v1/projects/{projectId}/measurements/{setId}/data/import/zip/url")]
-    Task<ApiResponse<string>> GetMeasurementZipUploadUrl(string projectId, string setId, CancellationToken cancellationToken = default);
-
-    [Get("/api/v1/projects/{projectId}/measurements/{setId}/data/archives")]
-    Task<ApiResponse<ListResponse<MeasurementSourceArchive>>> GetMeasurementSourceArchive(string projectId, string setId, [Query][AliasAs("source")] string source, [Query][AliasAs("dates")] DateTime[]? dates = null, CancellationToken cancellationToken = default); 
-    
-    [Get("/api/v1/projects/{projectId}/measurements/{setId}/data/archives/url")]
-    Task<ApiResponse<ListResponse<MeasurementSourceArchiveUrl>>> GetMeasurementSourceArchiveUrls(string projectId, string setId, [Query][AliasAs("source")] string source, [Query][AliasAs("dates")] DateTime[]? dates = null,
-        CancellationToken cancellationToken = default);
-
-
     [Get("/api/v1/projects/{projectId}/measurements/{id}/data/aggregate/hour_of_day")]
     public Task<ApiResponse<ListResponse<double[]>>> GetHourOfDayAggregate(string projectId, string id, 
         [Query][AliasAs("start")] long start,
@@ -298,17 +287,6 @@ public interface IEpochFlowV1
     #endregion
 
     #region Data
-
-    [Get("/api/v1/projects/{projectId}/events/{setId}/data/import/zip/url")]
-    Task<ApiResponse<string>> GetEventZipUploadUrl(string projectId, string setId, CancellationToken cancellationToken = default);
-
-    [Get("/api/v1/projects/{projectId}/events/{setId}/data/archives")]
-    Task<ApiResponse<ListResponse<EventSourceArchive>>> GetEventSourceArchive(string projectId, string setId, [Query][AliasAs("source")] string source, [Query][AliasAs("dates")] DateTime[]? dates = null,
-        CancellationToken cancellationToken = default);   
-    
-    [Get("/api/v1/projects/{projectId}/events/{setId}/data/archives/url")]
-    Task<ApiResponse<ListResponse<EventSourceArchiveUrl>>> GetEventSourceArchiveUrl(string projectId, string setId, [Query][AliasAs("source")] string source, [Query][AliasAs("dates")] DateTime[]? dates = null,
-        CancellationToken cancellationToken = default);
 
     [Post("/api/v1/projects/{projectId}/events/{id}/data")]
     public Task<HttpResponseMessage> PostEvent(string projectId, string id, [Body] EventDataPoint request);

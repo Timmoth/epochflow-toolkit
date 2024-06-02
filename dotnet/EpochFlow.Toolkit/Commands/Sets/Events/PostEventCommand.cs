@@ -3,14 +3,13 @@ using System.Diagnostics;
 using EpochFlow.ApiClient;
 using EpochFlow.ApiClient.Events;
 using EpochFlow.ApiClient.Utilities;
-using EpochFlow.Toolkit.Commands.Sets;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Refit;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
-namespace EpochFlow.Toolkit.Commands.DataGenerator;
+namespace EpochFlow.Toolkit.Commands.Sets.Events;
 
 public sealed class PostEventCommand : AsyncCommand<PostEventCommand.Settings>
 {
